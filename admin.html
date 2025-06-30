@@ -679,7 +679,6 @@
         </div>
       </div>
 
-
       <div class="tab-content" id="diary">
         <div class="content-panel">
           <div class="panel-header">새 다이어리 항목</div>
@@ -735,13 +734,27 @@
   </div>
 
   <script type="module">
+    import { db, storage } from './firebase/firebase.js';
+    import {
+      collection,
+      addDoc,
+      serverTimestamp,
+      getDocs,
+      query,
+      orderBy,
+      deleteDoc,
+      doc
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import {
+      ref,
+      uploadBytes,
+      getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
 
     if (!sessionStorage.getItem('admin')) {
       alert('접근 권한이 없습니다 🚫');
       window.location.href = 'login.html';
     }
-
-    console.log('관리자 페이지 로드됨');
 
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -756,6 +769,8 @@
           tc.classList.remove('active');
           if (tc.id === targetId) tc.classList.add('active');
         });
+        
+        loadContent(targetId);
       });
     });
 
@@ -783,75 +798,427 @@
       }, 3000);
     }
 
-    document.getElementById('blog-submit').addEventListener('click', () => {
+    function showDemoData() {
+      const blogList = document.getElementById('blog-list');
+      blogList.innerHTML = `
+        <div class="content-item">
+          <h3>첫 번째 블로그 글</h3>
+          <p>안녕하세요! 가현이의 블로그에 오신 것을 환영합니다.</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+        <div class="content-item">
+          <h3>윈도우 98 테마 제작기</h3>
+          <p>레트로한 감성의 홈페이지를 만들어보았습니다!</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+      `;
+
+      const galleryList = document.getElementById('gallery-list');
+      galleryList.innerHTML = `
+        <div class="content-item">
+          <div style="width: 100px; height: 80px; background: linear-gradient(45deg, #ff9a9e, #fecfef); border: 1px solid #999; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌸</div>
+          <p>봄날의 추억</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+        <div class="content-item">
+          <div style="width: 100px; height: 80px; background: linear-gradient(45deg, #a8edea, #fed6e3); border: 1px solid #999; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌊</div>
+          <p>바다 여행</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+      `;
+
+      const timelineList = document.getElementById('timeline-list');
+      timelineList.innerHTML = `
+        <div class="content-item">
+          <h3>프로젝트 시작</h3>
+          <p>윈도우 98 스타일의 개인 홈페이지 제작을 시작했습니다.</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+        <div class="content-item">
+          <h3>첫 번째 배포</h3>
+          <p>완성된 홈페이지를 처음으로 배포했습니다!</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+      `;
+
+      const youtubeList = document.getElementById('youtube-list');
+      youtubeList.innerHTML = `
+        <div class="content-item">
+          <h3>유튜브 영상</h3>
+          <p>재미있는 코딩 튜토리얼 영상입니다!</p>
+          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">https://www.youtube.com/watch?v=dQw4w9WgXcQ</a>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+      `;
+
+      const diaryList = document.getElementById('diary-list');
+      diaryList.innerHTML = `
+        <div class="content-item">
+          <h3>2024-06-30</h3>
+          <p>오늘은 정말 특별한 하루였어! 새로운 프로젝트를 시작했다.</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+        <div class="content-item">
+          <h3>2024-06-29</h3>
+          <p>친구들과 함께 카페에서 공부했다. 너무 행복한 시간이었어!</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+      `;
+
+      const guestbookList = document.getElementById('guestbook-list');
+      guestbookList.innerHTML = `
+        <div class="content-item">
+          <h3>친구</h3>
+          <p>홈페이지 정말 예쁘게 잘 만들었네! 😊</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+        <div class="content-item">
+          <h3>방문자</h3>
+          <p>윈도우 98 느낌이 너무 좋아요! 추억이 새록새록 ✨</p>
+          <div class="item-actions">
+            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
+          </div>
+        </div>
+      `;
+    }
+
+    document.getElementById('blog-submit').addEventListener('click', async () => {
       const title = document.getElementById('blog-title').value.trim();
       const content = document.getElementById('blog-content').value.trim();
       
       if (title && content) {
-        console.log('블로그 글 등록:', { title, content });
-        showSuccess('blog-success');
-        document.getElementById('blog-title').value = '';
-        document.getElementById('blog-content').value = '';
+        try {
+          await addDoc(collection(db, 'blog'), {
+            title,
+            content,
+            createdAt: serverTimestamp()
+          });
+          showSuccess('blog-success');
+          document.getElementById('blog-title').value = '';
+          document.getElementById('blog-content').value = '';
+          loadBlogList();
+        } catch (error) {
+          console.error('블로그 등록 오류:', error);
+          alert('등록 중 오류가 발생했습니다.');
+        }
       } else {
         alert('제목과 내용을 모두 입력해주세요! 📝');
       }
     });
 
-    document.getElementById('gallery-submit').addEventListener('click', () => {
+    document.getElementById('gallery-submit').addEventListener('click', async () => {
       const file = document.getElementById('gallery-file').files[0];
       const desc = document.getElementById('gallery-desc').value.trim();
       
       if (file && desc) {
-        console.log('이미지 업로드:', { file: file.name, desc });
-        showSuccess('gallery-success');
-        document.getElementById('gallery-file').value = '';
-        document.getElementById('gallery-desc').value = '';
+        try {
+          const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
+          const snapshot = await uploadBytes(storageRef, file);
+          const imageUrl = await getDownloadURL(snapshot.ref);
+          
+          await addDoc(collection(db, 'gallery'), {
+            imageUrl,
+            desc,
+            createdAt: serverTimestamp()
+          });
+          
+          showSuccess('gallery-success');
+          document.getElementById('gallery-file').value = '';
+          document.getElementById('gallery-desc').value = '';
+          loadGalleryList();
+        } catch (error) {
+          console.error('갤러리 업로드 오류:', error);
+          alert('업로드 중 오류가 발생했습니다.');
+        }
       } else {
         alert('파일과 설명을 모두 입력해주세요! 📷');
       }
     });
 
-    document.getElementById('timeline-submit').addEventListener('click', () => {
+    document.getElementById('timeline-submit').addEventListener('click', async () => {
       const title = document.getElementById('timeline-title').value.trim();
       const content = document.getElementById('timeline-content').value.trim();
       
       if (title && content) {
-        console.log('타임라인 이벤트 등록:', { title, content });
-        showSuccess('timeline-success');
-        document.getElementById('timeline-title').value = '';
-        document.getElementById('timeline-content').value = '';
+        try {
+          await addDoc(collection(db, 'timeline'), {
+            title,
+            content,
+            createdAt: serverTimestamp()
+          });
+          showSuccess('timeline-success');
+          document.getElementById('timeline-title').value = '';
+          document.getElementById('timeline-content').value = '';
+          loadTimelineList();
+        } catch (error) {
+          console.error('타임라인 등록 오류:', error);
+          alert('등록 중 오류가 발생했습니다.');
+        }
       } else {
         alert('제목과 내용을 모두 입력해주세요! ⏰');
       }
     });
 
-    document.getElementById('youtube-submit').addEventListener('click', () => {
+    document.getElementById('youtube-submit').addEventListener('click', async () => {
       const url = document.getElementById('youtube-url').value.trim();
       const desc = document.getElementById('youtube-desc').value.trim();
       
       if (url && desc) {
-        console.log('유튜브 영상 등록:', { url, desc });
-        showSuccess('youtube-success');
-        document.getElementById('youtube-url').value = '';
-        document.getElementById('youtube-desc').value = '';
+        try {
+          await addDoc(collection(db, 'youtube'), {
+            videoUrl: url,
+            description: desc,
+            createdAt: serverTimestamp()
+          });
+          showSuccess('youtube-success');
+          document.getElementById('youtube-url').value = '';
+          document.getElementById('youtube-desc').value = '';
+          loadYoutubeList();
+        } catch (error) {
+          console.error('유튜브 등록 오류:', error);
+          alert('등록 중 오류가 발생했습니다.');
+        }
       } else {
         alert('링크와 설명을 모두 입력해주세요! 📺');
       }
     });
 
-    document.getElementById('diary-submit').addEventListener('click', () => {
+    document.getElementById('diary-submit').addEventListener('click', async () => {
       const date = document.getElementById('diary-date').value;
       const content = document.getElementById('diary-content').value.trim();
       
       if (date && content) {
-        console.log('다이어리 등록:', { date, content });
-        showSuccess('diary-success');
-        document.getElementById('diary-date').value = '';
-        document.getElementById('diary-content').value = '';
+        try {
+          await addDoc(collection(db, 'diary'), {
+            date,
+            content,
+            createdAt: serverTimestamp()
+          });
+          showSuccess('diary-success');
+          document.getElementById('diary-date').value = '';
+          document.getElementById('diary-content').value = '';
+          loadDiaryList();
+        } catch (error) {
+          console.error('다이어리 등록 오류:', error);
+          alert('등록 중 오류가 발생했습니다.');
+        }
       } else {
         alert('날짜와 내용을 모두 입력해주세요! 📖');
       }
     });
+
+    async function loadBlogList() {
+      try {
+        const q = query(collection(db, 'blog'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const listElement = document.getElementById('blog-list');
+        
+        listElement.innerHTML = '';
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement('div');
+          item.className = 'content-item';
+          item.innerHTML = `
+            <h3>${data.title}</h3>
+            <p>${data.content}</p>
+            <div class="item-actions">
+              <button class="delete-btn" onclick="deleteItem('blog', '${doc.id}')">삭제</button>
+            </div>
+          `;
+          listElement.appendChild(item);
+        });
+      } catch (error) {
+        console.error('블로그 목록 로드 오류:', error);
+        showDemoData();
+      }
+    }
+
+    async function loadGalleryList() {
+      try {
+        const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const listElement = document.getElementById('gallery-list');
+        
+        listElement.innerHTML = '';
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement('div');
+          item.className = 'content-item';
+          item.innerHTML = `
+            <img src="${data.imageUrl}" class="gallery-preview" alt="${data.desc}">
+            <p>${data.desc}</p>
+            <div class="item-actions">
+              <button class="delete-btn" onclick="deleteItem('gallery', '${doc.id}')">삭제</button>
+            </div>
+          `;
+          listElement.appendChild(item);
+        });
+      } catch (error) {
+        console.error('갤러리 목록 로드 오류:', error);
+        showDemoData();
+      }
+    }
+
+    async function loadTimelineList() {
+      try {
+        const q = query(collection(db, 'timeline'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const listElement = document.getElementById('timeline-list');
+        
+        listElement.innerHTML = '';
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement('div');
+          item.className = 'content-item';
+          item.innerHTML = `
+            <h3>${data.title}</h3>
+            <p>${data.content}</p>
+            <div class="item-actions">
+              <button class="delete-btn" onclick="deleteItem('timeline', '${doc.id}')">삭제</button>
+            </div>
+          `;
+          listElement.appendChild(item);
+        });
+      } catch (error) {
+        console.error('타임라인 목록 로드 오류:', error);
+        showDemoData();
+      }
+    }
+
+    async function loadYoutubeList() {
+      try {
+        const q = query(collection(db, 'youtube'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const listElement = document.getElementById('youtube-list');
+        
+        listElement.innerHTML = '';
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement('div');
+          item.className = 'content-item';
+          item.innerHTML = `
+            <h3>유튜브 영상</h3>
+            <p>${data.description}</p>
+            <a href="${data.videoUrl}" target="_blank">${data.videoUrl}</a>
+            <div class="item-actions">
+              <button class="delete-btn" onclick="deleteItem('youtube', '${doc.id}')">삭제</button>
+            </div>
+          `;
+          listElement.appendChild(item);
+        });
+      } catch (error) {
+        console.error('유튜브 목록 로드 오류:', error);
+        showDemoData();
+      }
+    }
+
+    async function loadDiaryList() {
+      try {
+        const q = query(collection(db, 'diary'), orderBy('date', 'desc'));
+        const snapshot = await getDocs(q);
+        const listElement = document.getElementById('diary-list');
+        
+        listElement.innerHTML = '';
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement('div');
+          item.className = 'content-item';
+          item.innerHTML = `
+            <h3>${data.date}</h3>
+            <p>${data.content}</p>
+            <div class="item-actions">
+              <button class="delete-btn" onclick="deleteItem('diary', '${doc.id}')">삭제</button>
+            </div>
+          `;
+          listElement.appendChild(item);
+        });
+      } catch (error) {
+        console.error('다이어리 목록 로드 오류:', error);
+        showDemoData();
+      }
+    }
+
+    async function loadGuestbookList() {
+      try {
+        const q = query(collection(db, 'guestbook'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const listElement = document.getElementById('guestbook-list');
+        
+        listElement.innerHTML = '';
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement('div');
+          item.className = 'content-item';
+          item.innerHTML = `
+            <h3>${data.name}</h3>
+            <p>${data.message}</p>
+            <div class="item-actions">
+              <button class="delete-btn" onclick="deleteItem('guestbook', '${doc.id}')">삭제</button>
+            </div>
+          `;
+          listElement.appendChild(item);
+        });
+      } catch (error) {
+        console.error('방명록 목록 로드 오류:', error);
+        showDemoData();
+      }
+    }
+
+    window.deleteItem = async function(collectionName, docId) {
+      if (confirm('정말 삭제하시겠습니까?')) {
+        try {
+          await deleteDoc(doc(db, collectionName, docId));
+          loadContent(document.querySelector('.tab-btn.active').dataset.tab);
+          alert('삭제되었습니다.');
+        } catch (error) {
+          console.error('삭제 오류:', error);
+          alert('삭제 중 오류가 발생했습니다.');
+        }
+      }
+    };
+
+    function loadContent(tabId) {
+      switch(tabId) {
+        case 'blog':
+          loadBlogList();
+          break;
+        case 'gallery':
+          loadGalleryList();
+          break;
+        case 'timeline':
+          loadTimelineList();
+          break;
+        case 'youtube':
+          loadYoutubeList();
+          break;
+        case 'diary':
+          loadDiaryList();
+          break;
+        case 'guestbook':
+          loadGuestbookList();
+          break;
+      }
+    }
 
     document.getElementById('diary-date').value = new Date().toISOString().split('T')[0];
 
@@ -900,6 +1267,13 @@
     }
 
     setInterval(createAdminParticle, 4000);
+
+    try {
+      loadBlogList();
+    } catch (error) {
+      console.error('Firebase 초기화 실패:', error);
+      showDemoData();
+    }
   </script>
 </body>
 </html>
