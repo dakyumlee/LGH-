@@ -2,24 +2,747 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>가현이 방명록</title>
-  <link rel="stylesheet" href="css/show.css" />
+  <title>가현이 방명록 - Windows 98</title>
+  <style>
+    @font-face {
+        font-family: 'YoonChildfundkoreaManSeh';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/YoonChildfundkoreaManSeh.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'YoonChildfundkoreaManSeh', 'MS Sans Serif', sans-serif;
+      background: linear-gradient(45deg, #008080, #0080A0);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .desktop-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4"><rect width="1" height="1" fill="%23ffffff22"/></svg>') repeat,
+        linear-gradient(45deg, #008080, #0080A0);
+      z-index: -1;
+    }
+
+    .window {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #c0c0c0;
+      border: 2px outset #c0c0c0;
+      box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+      animation: windowBounceIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes windowBounceIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-100px) rotate(-10deg) scale(0.5);
+      }
+      60% {
+        transform: translateY(10px) rotate(5deg) scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(1);
+      }
+    }
+
+    .title-bar {
+      background: linear-gradient(to right, #ff6b35, #f7931e);
+      color: white;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .title-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+      animation: shine 2.5s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .title-text {
+      flex: 1;
+      font-size: 11px;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 2px;
+    }
+
+    .control-button {
+      width: 16px;
+      height: 14px;
+      background: linear-gradient(to bottom, #c0c0c0, #a0a0a0);
+      border: 1px outset #c0c0c0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: bold;
+      transition: all 0.1s;
+    }
+
+    .control-button:hover {
+      background: linear-gradient(to bottom, #d0d0d0, #b0b0b0);
+      transform: scale(1.1);
+    }
+
+    .control-button:active {
+      border: 1px inset #c0c0c0;
+    }
+
+    .window-body {
+      padding: 16px;
+      background: #c0c0c0;
+      min-height: 500px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+      border: 2px inset #c0c0c0;
+      border-radius: 4px;
+      animation: headerWave 4s ease-in-out infinite;
+    }
+
+    @keyframes headerWave {
+      0%, 100% { 
+        box-shadow: 0 0 10px rgba(255,107,53,0.3);
+        transform: translateY(0px);
+      }
+      50% { 
+        box-shadow: 0 0 25px rgba(255,107,53,0.6);
+        transform: translateY(-2px);
+      }
+    }
+
+    .page-header h2 {
+      color: #ff6b35;
+      margin-bottom: 8px;
+      font-size: 18px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .navigation-bar {
+      background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+      border: 2px inset #c0c0c0;
+      padding: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-button {
+      padding: 6px 12px;
+      background: linear-gradient(to bottom, #e0e0e0, #a0a0a0);
+      border: 2px outset #c0c0c0;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.1s;
+      text-decoration: none;
+      color: black;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-button:hover {
+      background: linear-gradient(to bottom, #f0f0f0, #b0b0b0);
+      transform: translateY(-1px);
+    }
+
+    .nav-button:active {
+      border: 2px inset #c0c0c0;
+      transform: translateY(0);
+    }
+
+    .guestbook-form {
+      background: linear-gradient(to bottom, #ffffff, #f8f8f8);
+      border: 2px inset #c0c0c0;
+      padding: 16px;
+      margin-bottom: 20px;
+      animation: formGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes formGlow {
+      from { box-shadow: 0 0 5px rgba(255,107,53,0.2); }
+      to { box-shadow: 0 0 15px rgba(255,107,53,0.5); }
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: bold;
+      color: #333;
+      font-size: 11px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 6px 8px;
+      border: 2px inset #c0c0c0;
+      background: white;
+      font-family: inherit;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border: 2px inset #0054e3;
+      background: #f0f8ff;
+    }
+
+    .form-textarea {
+      width: 100%;
+      height: 80px;
+      padding: 6px 8px;
+      border: 2px inset #c0c0c0;
+      background: white;
+      font-family: inherit;
+      font-size: 11px;
+      resize: vertical;
+      transition: all 0.2s;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border: 2px inset #0054e3;
+      background: #f0f8ff;
+    }
+
+    .submit-button {
+      padding: 8px 16px;
+      background: linear-gradient(to bottom, #4CAF50, #45a049);
+      border: 2px outset #c0c0c0;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s;
+      animation: buttonPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes buttonPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .submit-button:hover {
+      background: linear-gradient(to bottom, #5CBF60, #4CAF50);
+      transform: translateY(-1px);
+    }
+
+    .submit-button:active {
+      border: 2px inset #c0c0c0;
+      transform: translateY(1px);
+    }
+
+    .guestbook-entries {
+      display: grid;
+      gap: 12px;
+    }
+
+    .guestbook-entry {
+      background: linear-gradient(to bottom, #ffffff, #f8f8f8);
+      border: 2px inset #c0c0c0;
+      padding: 12px;
+      position: relative;
+      animation: entrySlideIn 0.5s ease-out;
+      transition: all 0.3s ease;
+    }
+
+    .guestbook-entry:nth-child(even) {
+      background: linear-gradient(to bottom, #f0f8ff, #e8f0ff);
+    }
+
+    @keyframes entrySlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .guestbook-entry:hover {
+      transform: translateX(5px);
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px dotted #ccc;
+    }
+
+    .entry-author {
+      font-weight: bold;
+      color: #ff6b35;
+      font-size: 12px;
+      position: relative;
+    }
+
+    .entry-author::before {
+      content: "👤";
+      margin-right: 4px;
+      animation: authorIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes authorIcon {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .entry-date {
+      font-size: 9px;
+      color: #666;
+      background: linear-gradient(to right, #e0e0e0, #f0f0f0);
+      padding: 2px 6px;
+      border: 1px inset #c0c0c0;
+      border-radius: 2px;
+    }
+
+    .entry-message {
+      color: #333;
+      line-height: 1.4;
+      font-size: 11px;
+      word-wrap: break-word;
+    }
+
+    .entry-decoration {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 16px;
+      opacity: 0.3;
+      animation: decorationFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes decorationFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(10deg); }
+    }
+
+    .loading-indicator {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-top: 2px solid #ff6b35;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .back-to-desktop {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 8px 12px;
+      background: linear-gradient(to bottom, #e0e0e0, #a0a0a0);
+      border: 2px outset #c0c0c0;
+      cursor: pointer;
+      font-size: 11px;
+      text-decoration: none;
+      color: black;
+      z-index: 1000;
+      transition: all 0.2s;
+    }
+
+    .back-to-desktop:hover {
+      background: linear-gradient(to bottom, #f0f0f0, #b0b0b0);
+      transform: scale(1.05);
+    }
+
+    .success-message {
+      background: linear-gradient(to bottom, #d4edda, #c3e6cb);
+      border: 2px inset #28a745;
+      color: #155724;
+      padding: 12px;
+      margin-bottom: 16px;
+      border-radius: 4px;
+      text-align: center;
+      animation: successBounce 0.5s ease-out;
+    }
+
+    @keyframes successBounce {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    ::-webkit-scrollbar {
+      width: 16px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #c0c0c0;
+      border: 1px inset #c0c0c0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, #dfdfdf, #a0a0a0);
+      border: 1px outset #c0c0c0;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .window {
+        margin: 0;
+      }
+
+      .window-body {
+        padding: 12px;
+      }
+
+      .navigation-bar {
+        flex-direction: column;
+      }
+
+      .nav-button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .entry-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="desktop-bg"></div>
+  
+  <a href="index.html" class="back-to-desktop">🏠 데스크톱으로</a>
+  
   <div class="window">
     <div class="title-bar">
-      <span>guestbook.exe</span>
-    </div>
-    <div class="window-body">
-      <h2>가현이 방명록 💬</h2>
-      <div class="guestbook-form">
-        <input type="text" id="guestName" placeholder="이름" />
-        <textarea id="guestMessage" placeholder="메시지를 남겨주세요"></textarea>
-        <button id="guestSubmit">작성</button>
+      <div class="title-text">💬 guestbook.exe - 가현이의 방명록</div>
+      <div class="window-controls">
+        <div class="control-button">-</div>
+        <div class="control-button">□</div>
+        <div class="control-button" onclick="window.close()">×</div>
       </div>
-      <div id="guestbookList">불러오는 중...</div>
+    </div>
+    
+    <div class="window-body">
+      <div class="page-header">
+        <h2>가현이 방명록 💬</h2>
+        <p>소중한 메시지를 남겨주세요!</p>
+      </div>
+
+      <div class="navigation-bar">
+        <a href="index.html" class="nav-button">🏠 홈</a>
+        <a href="blog.html" class="nav-button">📂 블로그</a>
+        <a href="gallery.html" class="nav-button">🖼️ 갤러리</a>
+        <a href="timeline.html" class="nav-button">⏰ 타임라인</a>
+        <a href="diary.html" class="nav-button">📖 다이어리</a>
+        <a href="youtube.html" class="nav-button">📺 유튜브</a>
+      </div>
+
+      <div class="guestbook-form">
+        <div class="form-group">
+          <label class="form-label" for="guestName">이름 ✨</label>
+          <input type="text" id="guestName" class="form-input" placeholder="이름을 입력해주세요" maxlength="20">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="guestMessage">메시지 💌</label>
+          <textarea id="guestMessage" class="form-textarea" placeholder="따뜻한 메시지를 남겨주세요"></textarea>
+        </div>
+        <button id="guestSubmit" class="submit-button">💝 메시지 남기기</button>
+      </div>
+
+      <div id="successMessage" class="success-message" style="display: none;">
+        🎉 메시지가 성공적으로 등록되었습니다!
+      </div>
+
+      <div class="guestbook-entries" id="guestbookList">
+        <div class="loading-indicator">
+          <div class="loading-spinner"></div>
+          방명록을 불러오는 중...
+        </div>
+      </div>
     </div>
   </div>
-  <script type="module" src="js/guestbook.js"></script>
+
+  <script type="module">
+    import { db } from './firebase/firebase.js';
+    import {
+      collection,
+      getDocs,
+      addDoc,
+      query,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const guestName = document.getElementById('guestName');
+    const guestMessage = document.getElementById('guestMessage');
+    const guestSubmit = document.getElementById('guestSubmit');
+    const guestbookList = document.getElementById('guestbookList');
+    const successMessage = document.getElementById('successMessage');
+
+    const decorationEmojis = ['💕', '🌟', '✨', '💫', '🎈', '🎉', '🌸', '🦋', '🌺', '💖'];
+
+    guestSubmit.addEventListener('click', async () => {
+      const name = guestName.value.trim();
+      const message = guestMessage.value.trim();
+      
+      if (!name || !message) {
+        alert('이름과 메시지를 모두 입력해주세요! 😊');
+        return;
+      }
+
+      if (name.length > 20) {
+        alert('이름은 20자 이내로 입력해주세요! 😅');
+        return;
+      }
+
+      if (message.length > 500) {
+        alert('메시지는 500자 이내로 입력해주세요! 📝');
+        return;
+      }
+
+      try {
+        guestSubmit.disabled = true;
+        guestSubmit.textContent = '등록 중...';
+
+        await addDoc(collection(db, 'guestbook'), {
+          name,
+          message,
+          createdAt: serverTimestamp()
+        });
+
+        guestName.value = '';
+        guestMessage.value = '';
+        
+        successMessage.style.display = 'block';
+        setTimeout(() => {
+          successMessage.style.display = 'none';
+        }, 3000);
+
+        loadGuestbook();
+        createCelebration();
+
+      } catch (error) {
+        console.error('메시지 등록 오류:', error);
+        alert('메시지 등록 중 오류가 발생했습니다. 다시 시도해주세요.');
+      } finally {
+        guestSubmit.disabled = false;
+        guestSubmit.textContent = '💝 메시지 남기기';
+      }
+    });
+
+    async function loadGuestbook() {
+      try {
+        const q = query(collection(db, 'guestbook'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          guestbookList.innerHTML = `
+            <div class="guestbook-entry">
+              <div class="entry-header">
+                <div class="entry-author">시스템 메시지</div>
+                <div class="entry-date">환영합니다</div>
+              </div>
+              <div class="entry-message">
+                첫 번째 메시지를 남겨주세요! 여러분의 따뜻한 말씀을 기다리고 있어요 💖
+              </div>
+              <div class="entry-decoration">🌟</div>
+            </div>
+          `;
+          return;
+        }
+
+        guestbookList.innerHTML = '';
+        let delay = 0;
+
+        snapshot.forEach(doc => {
+          const { name, message, createdAt } = doc.data();
+          const date = createdAt?.toDate().toLocaleString('ko-KR') ?? '방금 전';
+          const decoration = decorationEmojis[Math.floor(Math.random() * decorationEmojis.length)];
+          
+          const div = document.createElement('div');
+          div.className = 'guestbook-entry';
+          div.style.animationDelay = delay + 's';
+          div.innerHTML = `
+            <div class="entry-header">
+              <div class="entry-author">${name}</div>
+              <div class="entry-date">${date}</div>
+            </div>
+            <div class="entry-message">${message}</div>
+            <div class="entry-decoration">${decoration}</div>
+          `;
+          
+          guestbookList.appendChild(div);
+          delay += 0.1;
+        });
+
+      } catch (error) {
+        console.error('방명록 로딩 오류:', error);
+        guestbookList.innerHTML = `
+          <div class="guestbook-entry">
+            <div class="entry-header">
+              <div class="entry-author">오류</div>
+              <div class="entry-date">시스템</div>
+            </div>
+            <div class="entry-message">
+              방명록을 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
+            </div>
+            <div class="entry-decoration">❌</div>
+          </div>
+        `;
+      }
+    }
+
+    function createCelebration() {
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.innerHTML = decorationEmojis[Math.floor(Math.random() * decorationEmojis.length)];
+          confetti.style.position = 'fixed';
+          confetti.style.pointerEvents = 'none';
+          confetti.style.fontSize = '20px';
+          confetti.style.zIndex = '1000';
+          confetti.style.left = Math.random() * window.innerWidth + 'px';
+          confetti.style.top = '-20px';
+          confetti.style.animation = 'confettiFall 3s ease-out forwards';
+          
+          const style = document.createElement('style');
+          style.textContent = `
+            @keyframes confettiFall {
+              0% { 
+                opacity: 1; 
+                transform: translateY(0) rotate(0deg); 
+              }
+              100% { 
+                opacity: 0; 
+                transform: translateY(100vh) rotate(720deg); 
+              }
+            }
+          `;
+          document.head.appendChild(style);
+          
+          document.body.appendChild(confetti);
+          
+          setTimeout(() => {
+            confetti.remove();
+            style.remove();
+          }, 3000);
+        }, i * 200);
+      }
+    }
+
+    function createFloatingHearts() {
+      const heart = document.createElement('div');
+      heart.innerHTML = '💖';
+      heart.style.position = 'fixed';
+      heart.style.pointerEvents = 'none';
+      heart.style.fontSize = '16px';
+      heart.style.zIndex = '999';
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.top = window.innerHeight + 'px';
+      heart.style.animation = 'heartFloat 6s ease-out forwards';
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes heartFloat {
+          0% { 
+            opacity: 0; 
+            transform: translateY(0) scale(0.5); 
+          }
+          20% { 
+            opacity: 1; 
+            transform: translateY(-20px) scale(1); 
+          }
+          80% { 
+            opacity: 1; 
+          }
+          100% { 
+            opacity: 0; 
+            transform: translateY(-120vh) scale(0.5); 
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(heart);
+      
+      setTimeout(() => {
+        heart.remove();
+        style.remove();
+      }, 6000);
+    }
+
+    setInterval(createFloatingHearts, 4000);
+
+    guestMessage.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.ctrlKey) {
+        guestSubmit.click();
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', loadGuestbook);
+  </script>
 </body>
 </html>

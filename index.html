@@ -3,32 +3,832 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>가현이의 데스크탑</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <title>가현이의 데스크톱 - Windows 98</title>
+  <style>
+    @font-face {
+        font-family: 'YoonChildfundkoreaManSeh';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/YoonChildfundkoreaManSeh.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'YoonChildfundkoreaManSeh', 'MS Sans Serif', sans-serif;
+      font-size: 11px;
+      background: linear-gradient(45deg, #008080, #0080A0);
+      overflow: hidden;
+      height: 100vh;
+      cursor: url('data:image/cur;base64,AAACAAEAICAAAAcABQAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA'), auto;
+    }
+
+    .desktop {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4"><rect width="1" height="1" fill="%23ffffff22"/></svg>') repeat,
+        linear-gradient(45deg, #008080, #0080A0);
+      overflow: hidden;
+    }
+
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(to bottom, #c0c0c0, #808080);
+      border-top: 2px solid #dfdfdf;
+      display: flex;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 -2px 4px rgba(0,0,0,0.3);
+    }
+
+    .start-button {
+      height: 32px;
+      padding: 0 15px;
+      margin: 4px;
+      background: linear-gradient(to bottom, #c0c0c0, #a0a0a0);
+      border: 2px outset #c0c0c0;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.1s;
+    }
+
+    .start-button:hover {
+      background: linear-gradient(to bottom, #d0d0d0, #b0b0b0);
+    }
+
+    .start-button:active {
+      border: 2px inset #c0c0c0;
+      background: linear-gradient(to bottom, #a0a0a0, #c0c0c0);
+    }
+
+    .start-button::before {
+      content: "🏠";
+      font-size: 16px;
+    }
+
+    .taskbar-time {
+      margin-left: auto;
+      margin-right: 10px;
+      padding: 4px 8px;
+      background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+      border: 1px inset #c0c0c0;
+      font-size: 10px;
+    }
+
+    .window {
+      position: absolute;
+      background: #c0c0c0;
+      border: 2px outset #c0c0c0;
+      min-width: 300px;
+      max-width: 90vw;
+      max-height: 80vh;
+      box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+      z-index: 10;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .window.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .window.minimized {
+      opacity: 0;
+      transform: scale(0.1) translateY(100px);
+    }
+
+    .title-bar {
+      background: linear-gradient(to right, #0054e3, #0099ff);
+      color: white;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      cursor: move;
+      font-weight: bold;
+      user-select: none;
+    }
+
+    .window.inactive .title-bar {
+      background: linear-gradient(to right, #808080, #999999);
+    }
+
+    .title-text {
+      flex: 1;
+      padding-left: 4px;
+      font-size: 11px;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 2px;
+    }
+
+    .control-button {
+      width: 16px;
+      height: 14px;
+      background: linear-gradient(to bottom, #c0c0c0, #a0a0a0);
+      border: 1px outset #c0c0c0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: bold;
+      transition: all 0.1s;
+    }
+
+    .control-button:hover {
+      background: linear-gradient(to bottom, #d0d0d0, #b0b0b0);
+    }
+
+    .control-button:active {
+      border: 1px inset #c0c0c0;
+    }
+
+    .window-body {
+      padding: 8px;
+      background: #c0c0c0;
+      max-height: calc(80vh - 24px);
+      overflow-y: auto;
+    }
+
+    .desktop-icons {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, 80px);
+      gap: 20px;
+      z-index: 5;
+    }
+
+    .desktop-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80px;
+      padding: 8px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      transition: all 0.2s;
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .desktop-icon:nth-child(2n) {
+      animation-delay: 0.5s;
+    }
+
+    .desktop-icon:nth-child(3n) {
+      animation-delay: 1s;
+    }
+
+    .desktop-icon:hover {
+      background: rgba(0,84,227,0.3);
+      border: 1px dotted rgba(255,255,255,0.8);
+      transform: scale(1.1) translateY(-5px);
+    }
+
+    .desktop-icon:active {
+      transform: scale(0.95);
+    }
+
+    .icon-image {
+      font-size: 32px;
+      margin-bottom: 4px;
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+      transition: all 0.2s;
+    }
+
+    .desktop-icon:hover .icon-image {
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.8)) brightness(1.2);
+    }
+
+    .icon-label {
+      font-size: 11px;
+      text-align: center;
+      word-wrap: break-word;
+      max-width: 70px;
+    }
+
+    .start-menu {
+      position: fixed;
+      bottom: 40px;
+      left: 0;
+      width: 250px;
+      background: #c0c0c0;
+      border: 2px outset #c0c0c0;
+      box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+      z-index: 999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      pointer-events: none;
+    }
+
+    .start-menu.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    .start-menu-header {
+      background: linear-gradient(to right, #0054e3, #0099ff);
+      color: white;
+      padding: 8px;
+      font-weight: bold;
+      border-bottom: 1px solid #808080;
+    }
+
+    .start-menu-item {
+      padding: 8px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #d0d0d0;
+      transition: background 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .start-menu-item:hover {
+      background: #0054e3;
+      color: white;
+    }
+
+    @keyframes windowAppear {
+      from { 
+        opacity: 0; 
+        transform: scale(0.8) rotate(5deg);
+      }
+      to { 
+        opacity: 1; 
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1001;
+      animation: sparkle 1s ease-in-out infinite;
+    }
+
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #008080;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 1s ease-out;
+    }
+
+    .loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-logo {
+      font-size: 48px;
+      color: white;
+      margin-bottom: 20px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .loading-text {
+      color: white;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .loading-bar {
+      width: 200px;
+      height: 20px;
+      background: #004040;
+      border: 2px inset #c0c0c0;
+      overflow: hidden;
+    }
+
+    .loading-progress {
+      height: 100%;
+      background: linear-gradient(to right, #00ff00, #80ff80);
+      width: 0%;
+      animation: loadingProgress 3s ease-out forwards;
+    }
+
+    @keyframes loadingProgress {
+      to { width: 100%; }
+    }
+
+    @media (max-width: 768px) {
+      .desktop-icons {
+        grid-template-columns: repeat(3, 80px);
+        top: 10px;
+        left: 10px;
+        gap: 15px;
+      }
+
+      .window {
+        max-width: 95vw;
+        max-height: 85vh;
+      }
+
+      .start-menu {
+        width: 200px;
+      }
+
+      .taskbar {
+        height: 35px;
+      }
+
+      .start-button {
+        height: 28px;
+        padding: 0 10px;
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .desktop-icons {
+        grid-template-columns: repeat(2, 70px);
+        gap: 10px;
+      }
+
+      .desktop-icon {
+        width: 70px;
+        padding: 6px;
+      }
+
+      .icon-image {
+        font-size: 28px;
+      }
+
+      .icon-label {
+        font-size: 10px;
+        max-width: 60px;
+      }
+
+      .window {
+        min-width: 250px;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 16px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #c0c0c0;
+      border: 1px inset #c0c0c0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, #dfdfdf, #a0a0a0);
+      border: 1px outset #c0c0c0;
+    }
+
+    ::-webkit-scrollbar-button {
+      height: 16px;
+      background: linear-gradient(to bottom, #dfdfdf, #a0a0a0);
+      border: 1px outset #c0c0c0;
+    }
+
+    .window-body p, .window-body h2, .window-body h3 {
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .button-3d {
+      background: linear-gradient(to bottom, #e0e0e0, #a0a0a0);
+      border: 2px outset #c0c0c0;
+      padding: 4px 12px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .button-3d:hover {
+      background: linear-gradient(to bottom, #f0f0f0, #b0b0b0);
+    }
+
+    .button-3d:active {
+      border: 2px inset #c0c0c0;
+      background: linear-gradient(to bottom, #a0a0a0, #e0e0e0);
+    }
+  </style>
 </head>
 <body>
-  <div class="desktop">
-    <div class="window" id="window-intro">
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-logo">🖥️</div>
+    <div class="loading-text">가현이의 윈도우 98 부팅 중...</div>
+    <div class="loading-bar">
+      <div class="loading-progress"></div>
+    </div>
+  </div>
+
+  <div class="desktop" id="desktop">
+    <div class="desktop-icons">
+      <a href="index.html" class="desktop-icon" data-window="about">
+        <div class="icon-image">💫</div>
+        <div class="icon-label">HOME</div>
+      </a>
+      <a href="blog.html" class="desktop-icon" data-window="blog">
+        <div class="icon-image">📂</div>
+        <div class="icon-label">블로그</div>
+      </a>
+      <a href="gallery.html" class="desktop-icon" data-window="gallery">
+        <div class="icon-image">🖼️</div>
+        <div class="icon-label">갤러리</div>
+      </a>
+      <a href="timeline.html" class="desktop-icon" data-window="timeline">
+        <div class="icon-image">⏰</div>
+        <div class="icon-label">타임라인</div>
+      </a>
+      <a href="guestbook.html" class="desktop-icon" data-window="guestbook">
+        <div class="icon-image">💬</div>
+        <div class="icon-label">방명록</div>
+      </a>
+      <a href="youtube.html" class="desktop-icon" data-window="youtube">
+        <div class="icon-image">📺</div>
+        <div class="icon-label">유튜브</div>
+      </a>
+      <a href="diary.html" class="desktop-icon" data-window="diary">
+        <div class="icon-image">📖</div>
+        <div class="icon-label">다이어리</div>
+      </a>
+      <a href="login.html" class="desktop-icon" data-window="admin">
+        <div class="icon-image">🛠️</div>
+        <div class="icon-label">관리자</div>
+      </a>
+    </div>
+
+    <div class="window" id="aboutWindow">
       <div class="title-bar">
-        <span>AboutGahyun.txt</span>
+        <div class="title-text">💌 AboutGahyun.txt</div>
         <div class="window-controls">
-          <button>X</button>
+          <div class="control-button minimize-btn">-</div>
+          <div class="control-button maximize-btn">□</div>
+          <div class="control-button close-btn">×</div>
         </div>
       </div>
       <div class="window-body">
-        <p>  <a href="login.html" >💌</a> 안녕, 나는 가현이야.<br/>내 홈페이지에 온 걸 환영해!</p>
+        <h2>🌟 안녕, 나는 가현이야!</h2>
+        <p>내 홈페이지에 온 걸 환영해! ✨</p>
+        <br>
+        <div class="button-3d" onclick="openWindow('blog')">블로그 보기</div>
+        <div class="button-3d" onclick="openWindow('gallery')">갤러리 보기</div>
       </div>
     </div>
 
-    <div class="icon-grid">
-      <a href="blog.html" class="icon">📂 블로그</a>
-      <a href="gallery.html" class="icon">📁 갤러리</a>
-      <a href="timeline.html" class="icon">🕓 타임라인</a>
-      <a href="guestbook.html" class="icon">💬 방명록</a>
-      <a href="youtube.html" class="icon">📺 유튜브</a>
-      <a href="diary.html" class="icon">📖 다이어리</a>
+    <div class="window" id="blogWindow">
+      <div class="title-bar">
+        <div class="title-text">📂 blog.txt</div>
+        <div class="window-controls">
+          <div class="control-button minimize-btn">-</div>
+          <div class="control-button maximize-btn">□</div>
+          <div class="control-button close-btn">×</div>
+        </div>
+      </div>
+      <div class="window-body">
+        <h2>가현이 블로그 📘</h2>
+        <div id="blogList">
+          <div class="blog-post">
+            <h3>첫 번째 포스트</h3>
+            <p>안녕하세요! 가현이의 블로그에 오신 것을 환영합니다. 여기서 제 일상과 생각들을 공유할 예정이에요.</p>
+            <hr/>
+          </div>
+          <div class="blog-post">
+            <hr/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="window" id="galleryWindow">
+      <div class="title-bar">
+        <div class="title-text">🖼️ gallery.exe</div>
+        <div class="window-controls">
+          <div class="control-button minimize-btn">-</div>
+          <div class="control-button maximize-btn">□</div>
+          <div class="control-button close-btn">×</div>
+        </div>
+      </div>
+      <div class="window-body">
+        <h2>가현이 갤러리 🖼️</h2>
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #ff9a9e, #fecfef); border: 2px inset #c0c0c0; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌸</div>
+            <p>현태와</p>
+          </div>
+          <div class="gallery-item">
+            <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #a8edea, #fed6e3); border: 2px inset #c0c0c0; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌊</div>
+            <p>연출이었을 때!</p>
+          </div>
+          <div class="gallery-item">
+            <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #ffecd2, #fcb69f); border: 2px inset #c0c0c0; display: flex; align-items: center; justify-content: center; font-size: 24px;">🍂</div>
+            <p>미술부!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="start-menu" id="startMenu">
+      <div class="start-menu-header">가현이의 메뉴</div>
+      <div class="start-menu-item" onclick="openWindow('about')">
+        <span>💌</span> About Me
+      </div>
+      <div class="start-menu-item" onclick="openWindow('blog')">
+        <span>📂</span> 블로그
+      </div>
+      <div class="start-menu-item" onclick="openWindow('gallery')">
+        <span>🖼️</span> 갤러리
+      </div>
+      <div class="start-menu-item" onclick="openWindow('timeline')">
+        <span>⏰</span> 타임라인
+      </div>
+      <div class="start-menu-item" onclick="openWindow('guestbook')">
+        <span>💬</span> 방명록
+      </div>
+      <div class="start-menu-item" onclick="openWindow('youtube')">
+        <span>📺</span> 유튜브
+      </div>
+      <div class="start-menu-item" onclick="openWindow('diary')">
+        <span>📖</span> 다이어리
+      </div>
+      <div class="start-menu-item" onclick="openWindow('admin')">
+        <span>🛠️</span> 관리자
+      </div>
+    </div>
+
+    <div class="taskbar">
+      <div class="start-button" id="startButton">
+        시작
+      </div>
+      <div class="taskbar-time" id="taskbarTime">
+        12:34 PM
+      </div>
     </div>
   </div>
-  <script src="js/main.js"></script>
+
+  <script>
+    let draggedWindow = null;
+    let dragOffset = { x: 0, y: 0 };
+    let zIndexCounter = 100;
+    let startMenuOpen = false;
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('hidden');
+        setTimeout(() => {
+          openWindow('about');
+        }, 500);
+      }, 3000);
+    });
+
+    function updateTime() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('ko-KR', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+      document.getElementById('taskbarTime').textContent = timeString;
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    function openWindow(windowId) {
+      const window = document.getElementById(windowId + 'Window');
+      if (!window) return;
+
+      window.style.zIndex = ++zIndexCounter;
+      window.classList.add('active');
+      window.classList.remove('minimized');
+      
+      const randomX = Math.random() * (window.innerWidth - 400) + 50;
+      const randomY = Math.random() * (window.innerHeight - 300) + 50;
+      window.style.left = randomX + 'px';
+      window.style.top = randomY + 'px';
+
+      focusWindow(window);
+      createSparkles(window);
+      
+      if (startMenuOpen) {
+        toggleStartMenu();
+      }
+    }
+
+    function closeWindow(window) {
+      window.classList.remove('active');
+      window.classList.add('minimized');
+      setTimeout(() => {
+        window.style.display = 'none';
+      }, 300);
+    }
+
+    function minimizeWindow(window) {
+      window.classList.add('minimized');
+      setTimeout(() => {
+        window.style.display = 'none';
+      }, 300);
+    }
+
+    function maximizeWindow(window) {
+      if (window.classList.contains('maximized')) {
+        window.classList.remove('maximized');
+        window.style.width = '';
+        window.style.height = '';
+        window.style.left = '';
+        window.style.top = '';
+      } else {
+        window.classList.add('maximized');
+        window.style.width = '100vw';
+        window.style.height = 'calc(100vh - 40px)';
+        window.style.left = '0';
+        window.style.top = '0';
+      }
+    }
+
+    function focusWindow(window) {
+      document.querySelectorAll('.window').forEach(w => {
+        w.classList.remove('active');
+        w.classList.add('inactive');
+      });
+      window.classList.add('active');
+      window.classList.remove('inactive');
+      window.style.zIndex = ++zIndexCounter;
+    }
+
+    function createSparkles(element) {
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const sparkle = document.createElement('div');
+          sparkle.className = 'sparkle';
+          const rect = element.getBoundingClientRect();
+          sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+          sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+          document.body.appendChild(sparkle);
+          
+          setTimeout(() => {
+            sparkle.remove();
+          }, 1000);
+        }, i * 100);
+      }
+    }
+
+    function toggleStartMenu() {
+      const startMenu = document.getElementById('startMenu');
+      startMenuOpen = !startMenuOpen;
+      startMenu.classList.toggle('active', startMenuOpen);
+    }
+
+    function initializeWindowEvents() {
+      document.querySelectorAll('.window').forEach(window => {
+        window.style.display = 'block';
+        window.style.position = 'absolute';
+        
+        const titleBar = window.querySelector('.title-bar');
+        const closeBtn = window.querySelector('.close-btn');
+        const minimizeBtn = window.querySelector('.minimize-btn');
+        const maximizeBtn = window.querySelector('.maximize-btn');
+
+        titleBar.addEventListener('mousedown', (e) => {
+          if (e.target === closeBtn || e.target === minimizeBtn || e.target === maximizeBtn) return;
+          
+          draggedWindow = window;
+          const rect = window.getBoundingClientRect();
+          dragOffset.x = e.clientX - rect.left;
+          dragOffset.y = e.clientY - rect.top;
+          focusWindow(window);
+          e.preventDefault();
+        });
+
+        closeBtn.addEventListener('click', () => closeWindow(window));
+        minimizeBtn.addEventListener('click', () => minimizeWindow(window));
+        maximizeBtn.addEventListener('click', () => maximizeWindow(window));
+
+        window.addEventListener('mousedown', () => focusWindow(window));
+      });
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      if (draggedWindow) {
+        const newX = e.clientX - dragOffset.x;
+        const newY = e.clientY - dragOffset.y;
+        
+        const maxX = window.innerWidth - draggedWindow.offsetWidth;
+        const maxY = window.innerHeight - draggedWindow.offsetHeight - 40;
+        
+        draggedWindow.style.left = Math.max(0, Math.min(newX, maxX)) + 'px';
+        draggedWindow.style.top = Math.max(0, Math.min(newY, maxY)) + 'px';
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      draggedWindow = null;
+    });
+
+    document.getElementById('startButton').addEventListener('click', toggleStartMenu);
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.start-button') && !e.target.closest('.start-menu')) {
+        if (startMenuOpen) {
+          toggleStartMenu();
+        }
+      }
+    });
+
+    document.querySelectorAll('.desktop-icon').forEach(icon => {
+      icon.addEventListener('click', (e) => {
+        e.preventDefault();
+        const windowId = icon.dataset.window;
+        openWindow(windowId);
+      });
+
+      icon.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+        const windowId = icon.dataset.window;
+        openWindow(windowId);
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeWindowEvents();
+      
+      document.querySelectorAll('.window').forEach(window => {
+        window.style.display = 'none';
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.altKey && e.key === 'Tab') {
+        e.preventDefault();
+        const visibleWindows = Array.from(document.querySelectorAll('.window.active'));
+        if (visibleWindows.length > 1) {
+          const currentIndex = visibleWindows.findIndex(w => w.style.zIndex == zIndexCounter);
+          const nextIndex = (currentIndex + 1) % visibleWindows.length;
+          focusWindow(visibleWindows[nextIndex]);
+        }
+      }
+    });
+
+    setInterval(() => {
+      const icons = document.querySelectorAll('.desktop-icon');
+      const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+      randomIcon.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    }, 5000);
+  </script>
 </body>
 </html>

@@ -2,18 +2,654 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>관리자 로그인</title>
-  <link rel="stylesheet" href="css/login.css" />
+  <title>관리자 로그인 - Windows 98</title>
+  <style>
+    @font-face {
+        font-family: 'YoonChildfundkoreaManSeh';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/YoonChildfundkoreaManSeh.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'YoonChildfundkoreaManSeh', 'MS Sans Serif', sans-serif;
+      background: linear-gradient(45deg, #008080, #0080A0);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .desktop-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4"><rect width="1" height="1" fill="%23ffffff22"/></svg>') repeat,
+        linear-gradient(45deg, #008080, #0080A0);
+      z-index: -1;
+    }
+
+    .login-window {
+      background: #c0c0c0;
+      border: 2px outset #c0c0c0;
+      box-shadow: 8px 8px 16px rgba(0,0,0,0.4);
+      animation: loginAppear 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes loginAppear {
+      0% {
+        opacity: 0;
+        transform: translateY(-100px) rotateX(90deg) scale(0.5);
+      }
+      60% {
+        transform: translateY(20px) rotateX(-10deg) scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotateX(0deg) scale(1);
+      }
+    }
+
+    .title-bar {
+      background: linear-gradient(to right, #3498db, #2980b9);
+      color: white;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .title-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      animation: titleShine 3s infinite;
+    }
+
+    @keyframes titleShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .title-text {
+      flex: 1;
+      font-size: 11px;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 2px;
+    }
+
+    .control-button {
+      width: 16px;
+      height: 14px;
+      background: linear-gradient(to bottom, #c0c0c0, #a0a0a0);
+      border: 1px outset #c0c0c0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: bold;
+      transition: all 0.1s;
+    }
+
+    .control-button:hover {
+      background: linear-gradient(to bottom, #d0d0d0, #b0b0b0);
+      transform: scale(1.1);
+    }
+
+    .control-button:active {
+      border: 1px inset #c0c0c0;
+    }
+
+    .login-body {
+      padding: 24px;
+      background: #c0c0c0;
+      min-width: 350px;
+      text-align: center;
+    }
+
+    .login-header {
+      margin-bottom: 24px;
+      padding: 16px;
+      background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+      border: 2px inset #c0c0c0;
+      border-radius: 4px;
+      animation: headerPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes headerPulse {
+      0%, 100% { 
+        box-shadow: 0 0 10px rgba(52,152,219,0.3);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 25px rgba(52,152,219,0.7);
+        transform: scale(1.02);
+      }
+    }
+
+    .login-header h2 {
+      color: #3498db;
+      margin-bottom: 8px;
+      font-size: 16px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .login-header h2::before {
+      content: "🔐";
+      position: absolute;
+      left: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      animation: lockIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes lockIcon {
+      0%, 100% { 
+        transform: translateY(-50%) rotate(0deg); 
+        filter: hue-rotate(0deg);
+      }
+      50% { 
+        transform: translateY(-50%) rotate(10deg); 
+        filter: hue-rotate(180deg);
+      }
+    }
+
+    .security-badge {
+      display: inline-block;
+      background: linear-gradient(to right, #2ecc71, #27ae60);
+      color: white;
+      padding: 4px 8px;
+      font-size: 9px;
+      border-radius: 3px;
+      margin-top: 8px;
+      animation: badgeGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes badgeGlow {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: bold;
+      color: #333;
+      font-size: 11px;
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .form-label::before {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+    }
+
+    .form-label.email::before {
+      content: "📧";
+    }
+
+    .form-label.password::before {
+      content: "🔑";
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 2px inset #c0c0c0;
+      background: white;
+      font-family: inherit;
+      font-size: 11px;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border: 2px inset #3498db;
+      background: #f0f8ff;
+      box-shadow: 0 0 8px rgba(52,152,219,0.3);
+    }
+
+    .form-input:hover {
+      background: #f8f8f8;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: #666;
+      animation: inputIconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes inputIconFloat {
+      0%, 100% { transform: translateY(-50%); }
+      50% { transform: translateY(-60%); }
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(to bottom, #3498db, #2980b9);
+      border: 2px outset #c0c0c0;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .login-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .login-button:hover::before {
+      left: 100%;
+    }
+
+    .login-button:hover {
+      background: linear-gradient(to bottom, #5dade2, #3498db);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .login-button:active {
+      border: 2px inset #c0c0c0;
+      transform: translateY(0);
+    }
+
+    .login-button:disabled {
+      background: linear-gradient(to bottom, #bdc3c7, #95a5a6);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 10px;
+      margin-top: 8px;
+      padding: 8px;
+      background: linear-gradient(to bottom, #ffeaea, #ffdddd);
+      border: 2px inset #e74c3c;
+      border-radius: 4px;
+      text-align: center;
+      animation: errorShake 0.5s ease-in-out;
+      display: none;
+    }
+
+    @keyframes errorShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .back-to-home {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 8px 12px;
+      background: linear-gradient(to bottom, #e0e0e0, #a0a0a0);
+      border: 2px outset #c0c0c0;
+      cursor: pointer;
+      font-size: 11px;
+      text-decoration: none;
+      color: black;
+      z-index: 1000;
+      transition: all 0.2s;
+    }
+
+    .back-to-home:hover {
+      background: linear-gradient(to bottom, #f0f0f0, #b0b0b0);
+      transform: scale(1.05);
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(192,192,192,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .loading-spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #ccc;
+      border-top: 3px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .system-info {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(to bottom, #34495e, #2c3e50);
+      color: white;
+      padding: 8px 12px;
+      border: 2px outset #c0c0c0;
+      font-size: 9px;
+      border-radius: 4px;
+      animation: systemBlink 3s ease-in-out infinite;
+    }
+
+    @keyframes systemBlink {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    .floating-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      font-size: 20px;
+      animation: particleFloat 8s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes particleFloat {
+      from {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      to {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-body {
+        padding: 16px;
+        min-width: 280px;
+      }
+
+      .login-header h2 {
+        font-size: 14px;
+      }
+
+      .login-header h2::before {
+        left: -25px;
+        font-size: 16px;
+      }
+
+      .form-input {
+        padding: 6px 10px;
+      }
+
+      .login-button {
+        padding: 8px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Gahyun Admin Login</h2>
-    <input type="email" id="email" placeholder="이메일" value="gah7186@naver.com" />
-    <input type="password" id="password" placeholder="비밀번호" value="gah981107" />
-    <button id="loginBtn">로그인</button>
-    <p id="error" style="color: red;"></p>
+  <div class="desktop-bg"></div>
+  <div class="floating-particles"></div>
+  
+  <a href="index.html" class="back-to-home">🏠 홈으로</a>
+  
+  <div class="login-window">
+    <div class="title-bar">
+      <div class="title-text">🔐 System Login - Administrator Access</div>
+      <div class="window-controls">
+        <div class="control-button">-</div>
+        <div class="control-button">□</div>
+        <div class="control-button" onclick="window.close()">×</div>
+      </div>
+    </div>
+    
+    <div class="login-body">
+      <div class="login-header">
+        <h2>Admin Login</h2>
+        <p>관리자 전용 접근 구역</p>
+        <div class="security-badge">🛡️ SECURE ZONE</div>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label email" for="email">이메일 주소</label>
+          <div class="input-wrapper">
+            <input type="email" id="email" class="form-input" placeholder="admin@example.com" value="gah7186@naver.com" required>
+            <div class="input-icon">👤</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label password" for="password">비밀번호</label>
+          <div class="input-wrapper">
+            <input type="password" id="password" class="form-input" placeholder="••••••••" value="gah981107" required>
+            <div class="input-icon">🔒</div>
+          </div>
+        </div>
+
+        <button type="submit" id="loginBtn" class="login-button">
+          🚀 관리자 모드 진입
+        </button>
+
+        <div id="error" class="error-message"></div>
+      </form>
+
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
   </div>
 
-  <script type="module" src="js/login.js"></script>
+  <div class="system-info">
+    💻 Windows 98 Compatible | Secure Login v2.0
+  </div>
+
+  <script type="module">
+    import { auth } from './firebase/firebase.js';
+    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const errorMsg = document.getElementById('error');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    function showError(message) {
+      errorMsg.textContent = message;
+      errorMsg.style.display = 'block';
+      errorMsg.style.animation = 'none';
+      setTimeout(() => {
+        errorMsg.style.animation = 'errorShake 0.5s ease-in-out';
+      }, 10);
+      
+      setTimeout(() => {
+        errorMsg.style.display = 'none';
+      }, 4000);
+    }
+
+    function showLoading(show) {
+      loadingOverlay.style.display = show ? 'flex' : 'none';
+      loginBtn.disabled = show;
+      
+      if (show) {
+        loginBtn.textContent = '🔄 로그인 중...';
+      } else {
+        loginBtn.textContent = '🚀 관리자 모드 진입';
+      }
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (!email || !password) {
+        showError('이메일과 비밀번호를 모두 입력해주세요! 🚫');
+        return;
+      }
+
+      try {
+        showLoading(true);
+        
+        await signInWithEmailAndPassword(auth, email, password);
+        sessionStorage.setItem('admin', 'true');
+        
+        loginBtn.style.background = 'linear-gradient(to bottom, #27ae60, #2ecc71)';
+        loginBtn.textContent = '✅ 로그인 성공!';
+        
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 1000);
+        
+      } catch (error) {
+        console.error(error);
+        showLoading(false);
+        
+        let message = '로그인에 실패했습니다. ';
+        switch (error.code) {
+          case 'auth/user-not-found':
+            message += '존재하지 않는 계정입니다. 📧';
+            break;
+          case 'auth/wrong-password':
+            message += '비밀번호가 올바르지 않습니다. 🔑';
+            break;
+          case 'auth/invalid-email':
+            message += '올바른 이메일 형식을 입력해주세요. ✉️';
+            break;
+          case 'auth/too-many-requests':
+            message += '너무 많은 시도가 있었습니다. 잠시 후 다시 시도해주세요. ⏰';
+            break;
+          default:
+            message += '잠시 후 다시 시도해주세요. 🔄';
+        }
+        
+        showError(message);
+      }
+    });
+
+    [emailInput, passwordInput].forEach(input => {
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          loginForm.dispatchEvent(new Event('submit'));
+        }
+      });
+    });
+
+    [emailInput, passwordInput].forEach(input => {
+      input.addEventListener('focus', () => {
+        input.style.transform = 'scale(1.02)';
+      });
+      
+      input.addEventListener('blur', () => {
+        input.style.transform = 'scale(1)';
+      });
+    });
+
+    function createParticle() {
+      const particles = ['🔐', '🔑', '🛡️', '⚡', '💎', '🌟'];
+      const particle = particles[Math.floor(Math.random() * particles.length)];
+      
+      const element = document.createElement('div');
+      element.className = 'particle';
+      element.innerHTML = particle;
+      element.style.left = Math.random() * 100 + '%';
+      element.style.animationDelay = Math.random() * 8 + 's';
+      element.style.animationDuration = (Math.random() * 4 + 6) + 's';
+      
+      document.querySelector('.floating-particles').appendChild(element);
+      
+      setTimeout(() => {
+        element.remove();
+      }, 10000);
+    }
+
+    setInterval(createParticle, 2000);
+    
+    for (let i = 0; i < 5; i++) {
+      setTimeout(createParticle, i * 400);
+    }
+
+    function updateSystemInfo() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('ko-KR');
+      document.querySelector('.system-info').innerHTML = `💻 Windows 98 Compatible | ${timeString}`;
+    }
+
+    setInterval(updateSystemInfo, 1000);
+    updateSystemInfo();
+  </script>
 </body>
 </html>

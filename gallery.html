@@ -2,19 +2,646 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>가현이 갤러리</title>
-  <link rel="stylesheet" href="css/show.css" />
+  <title>가현이 갤러리 - Windows 98</title>
+  <style>
+    @font-face {
+        font-family: 'YoonChildfundkoreaManSeh';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/YoonChildfundkoreaManSeh.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'YoonChildfundkoreaManSeh', 'MS Sans Serif', sans-serif;
+      background: linear-gradient(45deg, #008080, #0080A0);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .desktop-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4"><rect width="1" height="1" fill="%23ffffff22"/></svg>') repeat,
+        linear-gradient(45deg, #008080, #0080A0);
+      z-index: -1;
+    }
+
+    .window {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #c0c0c0;
+      border: 2px outset #c0c0c0;
+      box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+      animation: windowSlideIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes windowSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-100px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    .title-bar {
+      background: linear-gradient(to right, #800080, #ff00ff);
+      color: white;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .title-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shine 2s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .title-text {
+      flex: 1;
+      font-size: 11px;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 2px;
+    }
+
+    .control-button {
+      width: 16px;
+      height: 14px;
+      background: linear-gradient(to bottom, #c0c0c0, #a0a0a0);
+      border: 1px outset #c0c0c0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: bold;
+      transition: all 0.1s;
+    }
+
+    .control-button:hover {
+      background: linear-gradient(to bottom, #d0d0d0, #b0b0b0);
+      transform: scale(1.1);
+    }
+
+    .control-button:active {
+      border: 1px inset #c0c0c0;
+    }
+
+    .window-body {
+      padding: 16px;
+      background: #c0c0c0;
+      min-height: 500px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+      border: 2px inset #c0c0c0;
+      border-radius: 4px;
+      animation: headerPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes headerPulse {
+      0%, 100% { 
+        box-shadow: 0 0 5px rgba(128,0,128,0.3);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 20px rgba(128,0,128,0.6);
+        transform: scale(1.02);
+      }
+    }
+
+    .page-header h2 {
+      color: #800080;
+      margin-bottom: 8px;
+      font-size: 18px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .navigation-bar {
+      background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+      border: 2px inset #c0c0c0;
+      padding: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-button {
+      padding: 6px 12px;
+      background: linear-gradient(to bottom, #e0e0e0, #a0a0a0);
+      border: 2px outset #c0c0c0;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.1s;
+      text-decoration: none;
+      color: black;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-button:hover {
+      background: linear-gradient(to bottom, #f0f0f0, #b0b0b0);
+      transform: translateY(-1px);
+    }
+
+    .nav-button:active {
+      border: 2px inset #c0c0c0;
+      transform: translateY(0);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .gallery-item {
+      background: linear-gradient(to bottom, #ffffff, #f8f8f8);
+      border: 2px inset #c0c0c0;
+      padding: 12px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInScale 0.6s ease-out;
+    }
+
+    .gallery-item:nth-child(2n) {
+      animation-delay: 0.1s;
+    }
+
+    .gallery-item:nth-child(3n) {
+      animation-delay: 0.2s;
+    }
+
+    .gallery-item:nth-child(4n) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.8) rotate(5deg);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 4px 4px 12px rgba(0,0,0,0.3);
+      border: 2px outset #c0c0c0;
+      z-index: 10;
+    }
+
+    .gallery-item::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #ff00ff, #800080, #ff00ff);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .gallery-item:hover::before {
+      opacity: 0.3;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border: 1px solid #999;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+      filter: brightness(1.1) contrast(1.1);
+    }
+
+    .gallery-placeholder {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(45deg, #ff9a9e, #fecfef, #a8edea, #fed6e3);
+      background-size: 400% 400%;
+      animation: gradientShift 3s ease infinite;
+      border: 1px solid #999;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .gallery-item p {
+      font-size: 11px;
+      color: #333;
+      font-weight: bold;
+      word-break: break-word;
+    }
+
+    .gallery-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: #c0c0c0;
+      border: 2px outset #c0c0c0;
+      max-width: 80%;
+      max-height: 80%;
+      padding: 16px;
+      position: relative;
+      animation: modalZoom 0.3s ease;
+    }
+
+    @keyframes modalZoom {
+      from { transform: scale(0.7); }
+      to { transform: scale(1); }
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      max-height: 60vh;
+      object-fit: contain;
+      border: 2px inset #c0c0c0;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 18px;
+      background: linear-gradient(to bottom, #ff6b6b, #ee5a5a);
+      border: 1px outset #c0c0c0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .modal-close:hover {
+      background: linear-gradient(to bottom, #ff8e8e, #ff6b6b);
+    }
+
+    .loading-indicator {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-top: 2px solid #800080;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .back-to-desktop {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 8px 12px;
+      background: linear-gradient(to bottom, #e0e0e0, #a0a0a0);
+      border: 2px outset #c0c0c0;
+      cursor: pointer;
+      font-size: 11px;
+      text-decoration: none;
+      color: black;
+      z-index: 1000;
+      transition: all 0.2s;
+    }
+
+    .back-to-desktop:hover {
+      background: linear-gradient(to bottom, #f0f0f0, #b0b0b0);
+      transform: scale(1.05);
+    }
+
+    ::-webkit-scrollbar {
+      width: 16px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #c0c0c0;
+      border: 1px inset #c0c0c0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, #dfdfdf, #a0a0a0);
+      border: 1px outset #c0c0c0;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .window {
+        margin: 0;
+      }
+
+      .window-body {
+        padding: 12px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+      }
+
+      .navigation-bar {
+        flex-direction: column;
+      }
+
+      .nav-button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .modal-content {
+        max-width: 95%;
+        max-height: 90%;
+        padding: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="desktop-bg"></div>
+  
+  <a href="index.html" class="back-to-desktop">🏠 데스크톱으로</a>
+  
   <div class="window">
     <div class="title-bar">
-      <span>gallery.exe</span>
+      <div class="title-text">🖼️ gallery.exe - 가현이의 갤러리</div>
+      <div class="window-controls">
+        <div class="control-button">-</div>
+        <div class="control-button">□</div>
+        <div class="control-button" onclick="window.close()">×</div>
+      </div>
     </div>
+    
     <div class="window-body">
-      <h2>가현이 갤러리 🖼️</h2>
-      <div id="galleryList" class="gallery-grid">불러오는 중...</div>
+      <div class="page-header">
+        <h2>가현이 갤러리 🖼️</h2>
+        <p>소중한 순간들을 담은 사진첩</p>
+      </div>
+
+      <div class="navigation-bar">
+        <a href="index.html" class="nav-button">🏠 홈</a>
+        <a href="blog.html" class="nav-button">📂 블로그</a>
+        <a href="timeline.html" class="nav-button">⏰ 타임라인</a>
+        <a href="diary.html" class="nav-button">📖 다이어리</a>
+        <a href="guestbook.html" class="nav-button">💬 방명록</a>
+        <a href="youtube.html" class="nav-button">📺 유튜브</a>
+      </div>
+
+      <div class="gallery-grid" id="galleryList">
+        <div class="loading-indicator">
+          <div class="loading-spinner"></div>
+          갤러리를 불러오는 중...
+        </div>
+      </div>
     </div>
   </div>
-  <script type="module" src="js/gallery.js"></script>
+
+  <div class="gallery-modal" id="galleryModal">
+    <div class="modal-content">
+      <div class="modal-close" onclick="closeModal()">×</div>
+      <img id="modalImage" src="" alt="">
+      <p id="modalDescription"></p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { db } from './firebase/firebase.js';
+    import {
+      collection,
+      getDocs,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const galleryList = document.getElementById('galleryList');
+    const galleryModal = document.getElementById('galleryModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalDescription = document.getElementById('modalDescription');
+
+    async function loadGallery() {
+      try {
+        galleryList.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div>갤러리를 불러오는 중...</div>';
+        
+        const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          galleryList.innerHTML = `
+            <div class="gallery-item">
+              <div class="gallery-placeholder">📷</div>
+              <p>첫 번째 사진을 업로드해보세요!</p>
+            </div>
+          `;
+          return;
+        }
+
+        galleryList.innerHTML = '';
+        let delay = 0;
+
+        snapshot.forEach(doc => {
+          const { imageUrl, desc } = doc.data();
+          
+          const item = document.createElement('div');
+          item.className = 'gallery-item';
+          item.style.animationDelay = delay + 's';
+          item.innerHTML = `
+            <img src="${imageUrl}" alt="${desc}" onclick="openModal('${imageUrl}', '${desc}')"/>
+            <p>${desc}</p>
+          `;
+          
+          galleryList.appendChild(item);
+          delay += 0.1;
+        });
+
+        const demoImages = [
+          { emoji: '🌸', desc: '봄날의 추억', color: '#ff9a9e' },
+          { emoji: '🌊', desc: '바다 여행', color: '#a8edea' },
+          { emoji: '🍂', desc: '가을 풍경', color: '#ffecd2' },
+          { emoji: '🌟', desc: '밤하늘', color: '#667eea' },
+          { emoji: '🎨', desc: '나의 작품', color: '#f093fb' },
+          { emoji: '🎂', desc: '생일 파티', color: '#fad0c4' }
+        ];
+
+        if (snapshot.size < 6) {
+          demoImages.slice(snapshot.size).forEach((demo, index) => {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.style.animationDelay = (delay + index * 0.1) + 's';
+            item.innerHTML = `
+              <div class="gallery-placeholder" style="background: linear-gradient(45deg, ${demo.color}, #ffffff);">${demo.emoji}</div>
+              <p>${demo.desc}</p>
+            `;
+            galleryList.appendChild(item);
+          });
+        }
+
+      } catch (error) {
+        console.error('갤러리 로딩 오류:', error);
+        galleryList.innerHTML = `
+          <div class="gallery-item">
+            <div class="gallery-placeholder">❌</div>
+            <p>갤러리를 불러오는 중 오류가 발생했습니다.</p>
+          </div>
+        `;
+      }
+    }
+
+    window.openModal = function(imageUrl, description) {
+      modalImage.src = imageUrl;
+      modalDescription.textContent = description;
+      galleryModal.style.display = 'flex';
+    }
+
+    window.closeModal = function() {
+      galleryModal.style.display = 'none';
+    }
+
+    galleryModal.addEventListener('click', (e) => {
+      if (e.target === galleryModal) {
+        closeModal();
+      }
+    });
+
+    function createFloatingEmoji() {
+      const emojis = ['🎨', '📸', '🖼️', '✨', '🌟', '💫'];
+      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+      
+      const element = document.createElement('div');
+      element.innerHTML = emoji;
+      element.style.position = 'fixed';
+      element.style.pointerEvents = 'none';
+      element.style.fontSize = '20px';
+      element.style.zIndex = '999';
+      element.style.left = Math.random() * window.innerWidth + 'px';
+      element.style.top = window.innerHeight + 'px';
+      element.style.animation = 'floatUp 4s ease-out forwards';
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes floatUp {
+          0% { 
+            opacity: 0; 
+            transform: translateY(0) rotate(0deg); 
+          }
+          20% { 
+            opacity: 1; 
+          }
+          80% { 
+            opacity: 1; 
+          }
+          100% { 
+            opacity: 0; 
+            transform: translateY(-100vh) rotate(360deg); 
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(element);
+      
+      setTimeout(() => {
+        element.remove();
+        style.remove();
+      }, 4000);
+    }
+
+    setInterval(createFloatingEmoji, 3000);
+
+    document.addEventListener('DOMContentLoaded', loadGallery);
+  </script>
 </body>
 </html>

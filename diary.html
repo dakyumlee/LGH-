@@ -2,19 +2,706 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>가현이 다이어리</title>
-  <link rel="stylesheet" href="css/show.css" />
+  <title>가현이 다이어리 - Windows 98</title>
+  <style>
+    @font-face {
+        font-family: 'YoonChildfundkoreaManSeh';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/YoonChildfundkoreaManSeh.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'YoonChildfundkoreaManSeh', 'MS Sans Serif', sans-serif;
+      background: linear-gradient(45deg, #008080, #0080A0);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .desktop-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4"><rect width="1" height="1" fill="%23ffffff22"/></svg>') repeat,
+        linear-gradient(45deg, #008080, #0080A0);
+      z-index: -1;
+    }
+
+    .window {
+      max-width: 750px;
+      margin: 0 auto;
+      background: #c0c0c0;
+      border: 2px outset #c0c0c0;
+      box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+      animation: windowFlip 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes windowFlip {
+      0% {
+        opacity: 0;
+        transform: rotateY(-90deg) scale(0.5);
+      }
+      50% {
+        transform: rotateY(-45deg) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: rotateY(0deg) scale(1);
+      }
+    }
+
+    .title-bar {
+      background: linear-gradient(to right, #8e44ad, #e74c3c);
+      color: white;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .title-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .title-text {
+      flex: 1;
+      font-size: 11px;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 2px;
+    }
+
+    .control-button {
+      width: 16px;
+      height: 14px;
+      background: linear-gradient(to bottom, #c0c0c0, #a0a0a0);
+      border: 1px outset #c0c0c0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: bold;
+      transition: all 0.1s;
+    }
+
+    .control-button:hover {
+      background: linear-gradient(to bottom, #d0d0d0, #b0b0b0);
+      transform: scale(1.1);
+    }
+
+    .control-button:active {
+      border: 1px inset #c0c0c0;
+    }
+
+    .window-body {
+      padding: 16px;
+      background: #c0c0c0;
+      min-height: 500px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+      border: 2px inset #c0c0c0;
+      border-radius: 4px;
+      animation: headerBreath 4s ease-in-out infinite;
+    }
+
+    @keyframes headerBreath {
+      0%, 100% { 
+        box-shadow: 0 0 8px rgba(142,68,173,0.3);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 20px rgba(142,68,173,0.7);
+        transform: scale(1.01);
+      }
+    }
+
+    .page-header h2 {
+      color: #8e44ad;
+      margin-bottom: 8px;
+      font-size: 18px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .navigation-bar {
+      background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+      border: 2px inset #c0c0c0;
+      padding: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-button {
+      padding: 6px 12px;
+      background: linear-gradient(to bottom, #e0e0e0, #a0a0a0);
+      border: 2px outset #c0c0c0;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.1s;
+      text-decoration: none;
+      color: black;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-button:hover {
+      background: linear-gradient(to bottom, #f0f0f0, #b0b0b0);
+      transform: translateY(-1px);
+    }
+
+    .nav-button:active {
+      border: 2px inset #c0c0c0;
+      transform: translateY(0);
+    }
+
+    .diary-container {
+      display: grid;
+      gap: 16px;
+    }
+
+    .diary-entry {
+      background: linear-gradient(to bottom, #fffef7, #faf8f1);
+      border: 2px inset #c0c0c0;
+      padding: 16px;
+      position: relative;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+      animation: entrySlideIn 0.6s ease-out;
+      transition: all 0.3s ease;
+      background-image: 
+        linear-gradient(90deg, #e0e0e0 1px, transparent 1px),
+        linear-gradient(180deg, #e0e0e0 1px, transparent 1px);
+      background-size: 20px 20px;
+      background-position: 0 0;
+    }
+
+    .diary-entry:nth-child(even) {
+      animation-delay: 0.2s;
+      background: linear-gradient(to bottom, #f0f8ff, #e8f0ff);
+    }
+
+    .diary-entry:nth-child(odd) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes entrySlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px) rotateX(45deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0deg);
+      }
+    }
+
+    .diary-entry:hover {
+      transform: translateY(-3px) rotateY(2deg);
+      box-shadow: 4px 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .diary-date {
+      font-size: 14px;
+      font-weight: bold;
+      color: #8e44ad;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      background: linear-gradient(to right, #e8d5f2, #f4e8f8);
+      border: 1px inset #c0c0c0;
+      border-radius: 4px;
+      position: relative;
+      text-align: center;
+    }
+
+    .diary-date::before {
+      content: "📅";
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: dateIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes dateIcon {
+      0%, 100% { transform: translateY(-50%) scale(1); }
+      50% { transform: translateY(-50%) scale(1.2); }
+    }
+
+    .diary-content {
+      line-height: 1.6;
+      color: #333;
+      font-size: 12px;
+      margin-bottom: 12px;
+      text-align: justify;
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .diary-content::before {
+      content: "✍️";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 16px;
+      animation: writingIcon 4s ease-in-out infinite;
+    }
+
+    @keyframes writingIcon {
+      0%, 100% { 
+        transform: rotate(0deg); 
+        opacity: 0.7;
+      }
+      25% { 
+        transform: rotate(-10deg); 
+        opacity: 1;
+      }
+      75% { 
+        transform: rotate(10deg); 
+        opacity: 1;
+      }
+    }
+
+    .diary-mood {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 24px;
+      animation: moodFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes moodFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(5deg); }
+    }
+
+    .diary-separator {
+      height: 2px;
+      background: linear-gradient(to right, transparent, #8e44ad, transparent);
+      margin: 16px 0;
+      border: none;
+      animation: separatorGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes separatorGlow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .loading-indicator {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-top: 2px solid #8e44ad;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .back-to-desktop {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 8px 12px;
+      background: linear-gradient(to bottom, #e0e0e0, #a0a0a0);
+      border: 2px outset #c0c0c0;
+      cursor: pointer;
+      font-size: 11px;
+      text-decoration: none;
+      color: black;
+      z-index: 1000;
+      transition: all 0.2s;
+    }
+
+    .back-to-desktop:hover {
+      background: linear-gradient(to bottom, #f0f0f0, #b0b0b0);
+      transform: scale(1.05);
+    }
+
+    .empty-diary {
+      text-align: center;
+      padding: 40px;
+      background: linear-gradient(to bottom, #fff, #f8f8f8);
+      border: 2px inset #c0c0c0;
+      border-radius: 8px;
+      animation: emptyFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes emptyFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .empty-diary .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      animation: emptyIconSpin 4s ease-in-out infinite;
+    }
+
+    @keyframes emptyIconSpin {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(10deg); }
+    }
+
+    .notebook-decoration {
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #ff6b6b, #ee5a5a);
+      border-radius: 1px;
+    }
+
+    .notebook-holes {
+      position: absolute;
+      left: 8px;
+      top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .notebook-hole {
+      width: 8px;
+      height: 8px;
+      background: #c0c0c0;
+      border: 1px inset #a0a0a0;
+      border-radius: 50%;
+    }
+
+    ::-webkit-scrollbar {
+      width: 16px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #c0c0c0;
+      border: 1px inset #c0c0c0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, #dfdfdf, #a0a0a0);
+      border: 1px outset #c0c0c0;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .window {
+        margin: 0;
+      }
+
+      .window-body {
+        padding: 12px;
+      }
+
+      .navigation-bar {
+        flex-direction: column;
+      }
+
+      .nav-button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .diary-content {
+        font-size: 11px;
+        padding-left: 16px;
+      }
+
+      .diary-date {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="desktop-bg"></div>
+  
+  <a href="index.html" class="back-to-desktop">🏠 데스크톱으로</a>
+  
   <div class="window">
     <div class="title-bar">
-      <span>diary.txt</span>
+      <div class="title-text">📖 diary.txt - 가현이의 다이어리</div>
+      <div class="window-controls">
+        <div class="control-button">-</div>
+        <div class="control-button">□</div>
+        <div class="control-button" onclick="window.close()">×</div>
+      </div>
     </div>
+    
     <div class="window-body">
-      <h2>가현이 다이어리 📖</h2>
-      <div id="diaryList">불러오는 중...</div>
+      <div class="page-header">
+        <h2>가현이 다이어리 📖</h2>
+        <p>일상의 소중한 순간들을 기록하는 공간</p>
+      </div>
+
+      <div class="navigation-bar">
+        <a href="index.html" class="nav-button">🏠 홈</a>
+        <a href="blog.html" class="nav-button">📂 블로그</a>
+        <a href="gallery.html" class="nav-button">🖼️ 갤러리</a>
+        <a href="timeline.html" class="nav-button">⏰ 타임라인</a>
+        <a href="guestbook.html" class="nav-button">💬 방명록</a>
+        <a href="youtube.html" class="nav-button">📺 유튜브</a>
+      </div>
+
+      <div class="diary-container" id="diaryList">
+        <div class="loading-indicator">
+          <div class="loading-spinner"></div>
+          다이어리를 불러오는 중...
+        </div>
+      </div>
     </div>
   </div>
-  <script type="module" src="js/diary.js"></script>
+
+  <script type="module">
+    import { db } from './firebase/firebase.js';
+    import {
+      collection,
+      getDocs,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const diaryList = document.getElementById('diaryList');
+
+    const moodEmojis = ['😊', '😔', '😍', '🤔', '😴', '🎉', '💕', '😌', '🥰', '🌟'];
+    const randomMoods = () => moodEmojis[Math.floor(Math.random() * moodEmojis.length)];
+
+    async function loadDiary() {
+      try {
+        diaryList.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div>다이어리를 불러오는 중...</div>';
+        
+        const q = query(collection(db, 'diary'), orderBy('date', 'desc'));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          diaryList.innerHTML = `
+            <div class="empty-diary">
+              <div class="empty-icon">📝</div>
+              <h3>아직 일기가 없어요</h3>
+              <p>첫 번째 일기를 작성해보세요! ✨</p>
+            </div>
+          `;
+          return;
+        }
+
+        diaryList.innerHTML = '';
+        let delay = 0;
+
+        snapshot.forEach(doc => {
+          const { date, content } = doc.data();
+          const mood = randomMoods();
+          
+          const item = document.createElement('div');
+          item.className = 'diary-entry';
+          item.style.animationDelay = delay + 's';
+          item.innerHTML = `
+            <div class="notebook-decoration"></div>
+            <div class="notebook-holes">
+              <div class="notebook-hole"></div>
+              <div class="notebook-hole"></div>
+              <div class="notebook-hole"></div>
+              <div class="notebook-hole"></div>
+            </div>
+            <div class="diary-mood">${mood}</div>
+            <div class="diary-date">${date}</div>
+            <div class="diary-content">${content}</div>
+            <hr class="diary-separator">
+          `;
+          
+          diaryList.appendChild(item);
+          delay += 0.2;
+        });
+
+        const demoEntries = [
+          {
+            date: '2024-06-30',
+            content: '오늘은 정말 특별한 하루였어! 새로운 프로젝트를 시작했는데, 윈도우 98 스타일의 홈페이지를 만들어봤다. 레트로한 감성이 너무 좋다 ✨'
+          },
+          {
+            date: '2024-06-29',
+            content: '친구들과 함께 카페에서 공부했다. 맛있는 라떼와 함께한 시간이 너무 행복했어. 집중도 잘 되고 알찬 하루였다! 💕'
+          },
+          {
+            date: '2024-06-28',
+            content: '비가 와서 집에서 영화를 봤다. 창밖의 빗소리를 들으며 여유로운 시간을 보냈어. 이런 날도 필요한 것 같다 🌧️'
+          }
+        ];
+
+        if (snapshot.size === 0) {
+          demoEntries.forEach((demo, index) => {
+            const item = document.createElement('div');
+            item.className = 'diary-entry';
+            item.style.animationDelay = (delay + index * 0.2) + 's';
+            const mood = randomMoods();
+            item.innerHTML = `
+              <div class="notebook-decoration"></div>
+              <div class="notebook-holes">
+                <div class="notebook-hole"></div>
+                <div class="notebook-hole"></div>
+                <div class="notebook-hole"></div>
+                <div class="notebook-hole"></div>
+              </div>
+              <div class="diary-mood">${mood}</div>
+              <div class="diary-date">${demo.date}</div>
+              <div class="diary-content">${demo.content}</div>
+              <hr class="diary-separator">
+            `;
+            diaryList.appendChild(item);
+          });
+        }
+
+      } catch (error) {
+        console.error('다이어리 로딩 오류:', error);
+        diaryList.innerHTML = `
+          <div class="diary-entry">
+            <div class="diary-mood">😞</div>
+            <div class="diary-date">오류 발생</div>
+            <div class="diary-content">
+              다이어리를 불러오는 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function createFloatingStars() {
+      const stars = ['⭐', '🌟', '✨', '💫', '🌠'];
+      const star = stars[Math.floor(Math.random() * stars.length)];
+      
+      const element = document.createElement('div');
+      element.innerHTML = star;
+      element.style.position = 'fixed';
+      element.style.pointerEvents = 'none';
+      element.style.fontSize = '16px';
+      element.style.zIndex = '999';
+      element.style.left = Math.random() * window.innerWidth + 'px';
+      element.style.top = '-20px';
+      element.style.animation = 'starFall 5s ease-out forwards';
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes starFall {
+          0% { 
+            opacity: 0; 
+            transform: translateY(0) rotate(0deg); 
+          }
+          20% { 
+            opacity: 1; 
+          }
+          80% { 
+            opacity: 1; 
+          }
+          100% { 
+            opacity: 0; 
+            transform: translateY(100vh) rotate(360deg); 
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(element);
+      
+      setTimeout(() => {
+        element.remove();
+        style.remove();
+      }, 5000);
+    }
+
+    function createWritingParticles() {
+      const particles = ['💭', '✍️', '📝', '💡', '🎯'];
+      const particle = particles[Math.floor(Math.random() * particles.length)];
+      
+      const element = document.createElement('div');
+      element.innerHTML = particle;
+      element.style.position = 'fixed';
+      element.style.pointerEvents = 'none';
+      element.style.fontSize = '14px';
+      element.style.zIndex = '999';
+      element.style.left = Math.random() * window.innerWidth + 'px';
+      element.style.top = Math.random() * window.innerHeight + 'px';
+      element.style.animation = 'particleFloat 3s ease-out forwards';
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes particleFloat {
+          0% { 
+            opacity: 0; 
+            transform: scale(0) rotate(0deg); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: scale(1) rotate(180deg); 
+          }
+          100% { 
+            opacity: 0; 
+            transform: scale(0) rotate(360deg); 
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(element);
+      
+      setTimeout(() => {
+        element.remove();
+        style.remove();
+      }, 3000);
+    }
+
+    setInterval(createFloatingStars, 4000);
+    setInterval(createWritingParticles, 6000);
+
+    document.addEventListener('DOMContentLoaded', loadDiary);
+  </script>
 </body>
 </html>
