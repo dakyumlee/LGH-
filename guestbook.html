@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>가현이 방명록</title>
+  <link rel="stylesheet" href="css/show.css" />
+</head>
+<body>
+  <div class="window">
+    <div class="title-bar">
+      <span>guestbook.exe</span>
+    </div>
+    <div class="window-body">
+      <h2>가현이 방명록 💬</h2>
+      <div class="guestbook-form">
+        <input type="text" id="guestName" placeholder="이름" />
+        <textarea id="guestMessage" placeholder="메시지를 남겨주세요"></textarea>
+        <button id="guestSubmit">작성</button>
+      </div>
+      <div id="guestbookList">불러오는 중...</div>
+    </div>
+  </div>
+  <script type="module" src="js/guestbook.js"></script>
+</body>
+</html>

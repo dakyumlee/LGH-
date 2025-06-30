@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>가현이 관리자 페이지</title>
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+  <div class="admin-header">
+    <h1>가현이 관리자 페이지 🛠️</h1>
+    <button id="logoutBtn">로그아웃</button>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="tab-btn active" data-tab="blog">블로그</button>
+    <button class="tab-btn" data-tab="gallery">갤러리</button>
+    <button class="tab-btn" data-tab="timeline">타임라인</button>
+    <button class="tab-btn" data-tab="youtube">유튜브</button>
+    <button class="tab-btn" data-tab="diary">다이어리</button>
+    <button class="tab-btn" data-tab="guestbook">방명록</button>
+  </div>
+
+  <div class="tab-content" id="blog">
+    <div class="blog-form">
+      <input type="text" id="blog-title" placeholder="제목" />
+      <textarea id="blog-content" placeholder="내용"></textarea>
+      <button id="blog-submit">글 등록</button>
+    </div>
+    <div id="blog-list"></div>
+  </div>
+
+  <div class="tab-content hidden" id="gallery">
+    <div class="gallery-form">
+      <input type="file" id="gallery-file" accept="image/*" />
+      <input type="text" id="gallery-desc" placeholder="설명" />
+      <button id="gallery-submit">업로드</button>
+    </div>
+    <div id="gallery-list"></div>
+  </div>
+
+  <div class="tab-content hidden" id="timeline">
+    <div class="timeline-form">
+      <input type="text" id="timeline-title" placeholder="이벤트 제목" />
+      <textarea id="timeline-content" placeholder="내용"></textarea>
+      <button id="timeline-submit">글 등록</button>
+    </div>
+    <div id="timeline-list"></div>
+  </div>
+
+  <div class="tab-content hidden" id="youtube">
+    <div class="youtube-form">
+      <input type="text" id="youtube-url" placeholder="유튜브 링크" />
+      <input type="text" id="youtube-desc" placeholder="설명" />
+      <button id="youtube-submit">등록</button>
+    </div>
+    <div id="youtube-list"></div>
+  </div>
+
+  <div class="tab-content hidden" id="diary">
+    <div class="diary-form">
+      <input type="date" id="diary-date" />
+      <textarea id="diary-content" placeholder="오늘의 일기"></textarea>
+      <button id="diary-submit">등록</button>
+    </div>
+    <div id="diary-list"></div>
+  </div>
+
+  <div class="tab-content hidden" id="guestbook">
+    <div id="guestbook-list">불러오는 중...</div>
+  </div>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

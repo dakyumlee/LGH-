@@ -1,0 +1,60 @@
+@font-face {
+    font-family: 'YoonChildfundkoreaManSeh';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/YoonChildfundkoreaManSeh.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(#d6ecff, #a8d8ff);
+  font-family: 'YoonChildfundkoreaManSeh';
+  color: #000;
+}
+
+.desktop {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.window {
+  width: 300px;
+  border: 2px solid #000;
+  background: #fff;
+  margin-bottom: 1rem;
+  box-shadow: 3px 3px #666;
+}
+
+.title-bar {
+  background: #0066cc;
+  color: #fff;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.icon-grid {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.icon {
+  display: inline-block;
+  background: #fff;
+  border: 2px solid #ccc;
+  padding: 0.8rem;
+  border-radius: 4px;
+  box-shadow: 2px 2px #999;
+  text-align: center;
+  text-decoration: none;
+  color: #333;
+}
+
+a {
+  text-decoration: none;
+}

@@ -1,0 +1,93 @@
+@font-face {
+    font-family: 'YoonChildfundkoreaManSeh';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/YoonChildfundkoreaManSeh.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+  font-family: 'YoonChildfundkoreaManSeh';
+  background: #e0f0ff;
+  padding: 1rem;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-tabs {
+  margin-top: 1rem;
+}
+
+.tab-btn {
+font-family: 'YoonChildfundkoreaManSeh';
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  background: #ccc;
+  border: none;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: #0066cc;
+  color: white;
+}
+
+.tab-content {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 2px solid #0066cc;
+  background: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.gallery-item {
+  display: inline-block;
+  margin: 1rem;
+  text-align: center;
+}
+.gallery-item img {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-item {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #f9f9f9;
+}
+
+.youtube-item {
+  margin-bottom: 1rem;
+  background: #fff;
+  padding: 1rem;
+  border: 1px solid #ddd;
+}
+.youtube-item iframe {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.diary-item {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #fefefe;
+  border: 1px solid #ccc;
+}
+
+.guestbook-item {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #f5faff;
+  border: 1px solid #bbb;
+}
+
+
+
