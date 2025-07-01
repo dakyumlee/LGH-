@@ -339,6 +339,12 @@
       transform: translateY(1px);
     }
 
+    .submit-btn:disabled {
+      background: linear-gradient(to bottom, #bdc3c7, #95a5a6);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
     .delete-btn {
       padding: 4px 8px;
       background: linear-gradient(to bottom, #e74c3c, #c0392b);
@@ -356,26 +362,6 @@
     }
 
     .delete-btn:active {
-      border: 2px inset #c0c0c0;
-    }
-
-    .edit-btn {
-      padding: 4px 8px;
-      background: linear-gradient(to bottom, #f39c12, #e67e22);
-      border: 2px outset #c0c0c0;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 9px;
-      transition: all 0.1s;
-      margin-left: 4px;
-    }
-
-    .edit-btn:hover {
-      background: linear-gradient(to bottom, #f7dc6f, #f39c12);
-    }
-
-    .edit-btn:active {
       border: 2px inset #c0c0c0;
     }
 
@@ -744,17 +730,19 @@
       orderBy,
       deleteDoc,
       doc
-    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
     import {
       ref,
       uploadBytes,
       getDownloadURL
-    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
 
     if (!sessionStorage.getItem('admin')) {
       alert('접근 권한이 없습니다 🚫');
       window.location.href = 'login.html';
     }
+
+    let currentTab = 'blog';
 
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -765,6 +753,8 @@
         btn.classList.add('active');
         
         const targetId = btn.dataset.tab;
+        currentTab = targetId;
+        
         tabContents.forEach(tc => {
           tc.classList.remove('active');
           if (tc.id === targetId) tc.classList.add('active');
@@ -798,131 +788,52 @@
       }, 3000);
     }
 
-    function showDemoData() {
-      const blogList = document.getElementById('blog-list');
-      blogList.innerHTML = `
-        <div class="content-item">
-          <h3>첫 번째 블로그 글</h3>
-          <p>안녕하세요! 가현이의 블로그에 오신 것을 환영합니다.</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <h3>윈도우 98 테마 제작기</h3>
-          <p>레트로한 감성의 홈페이지를 만들어보았습니다!</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
+    function setButtonState(buttonId, loading) {
+      const button = document.getElementById(buttonId);
+      if (loading) {
+        button.disabled = true;
+        button.textContent = '처리 중...';
+      } else {
+        button.disabled = false;
 
-      const galleryList = document.getElementById('gallery-list');
-      galleryList.innerHTML = `
-        <div class="content-item">
-          <div style="width: 100px; height: 80px; background: linear-gradient(45deg, #ff9a9e, #fecfef); border: 1px solid #999; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌸</div>
-          <p>봄날의 추억</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <div style="width: 100px; height: 80px; background: linear-gradient(45deg, #a8edea, #fed6e3); border: 1px solid #999; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌊</div>
-          <p>바다 여행</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
-
-      const timelineList = document.getElementById('timeline-list');
-      timelineList.innerHTML = `
-        <div class="content-item">
-          <h3>프로젝트 시작</h3>
-          <p>윈도우 98 스타일의 개인 홈페이지 제작을 시작했습니다.</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <h3>첫 번째 배포</h3>
-          <p>완성된 홈페이지를 처음으로 배포했습니다!</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
-
-      const youtubeList = document.getElementById('youtube-list');
-      youtubeList.innerHTML = `
-        <div class="content-item">
-          <h3>유튜브 영상</h3>
-          <p>재미있는 코딩 튜토리얼 영상입니다!</p>
-          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">https://www.youtube.com/watch?v=dQw4w9WgXcQ</a>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
-
-      const diaryList = document.getElementById('diary-list');
-      diaryList.innerHTML = `
-        <div class="content-item">
-          <h3>2024-06-30</h3>
-          <p>오늘은 정말 특별한 하루였어! 새로운 프로젝트를 시작했다.</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <h3>2024-06-29</h3>
-          <p>친구들과 함께 카페에서 공부했다. 너무 행복한 시간이었어!</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
-
-      const guestbookList = document.getElementById('guestbook-list');
-      guestbookList.innerHTML = `
-        <div class="content-item">
-          <h3>친구</h3>
-          <p>홈페이지 정말 예쁘게 잘 만들었네! 😊</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <h3>방문자</h3>
-          <p>윈도우 98 느낌이 너무 좋아요! 추억이 새록새록 ✨</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
+        switch(buttonId) {
+          case 'blog-submit': button.textContent = '📝 글 등록'; break;
+          case 'gallery-submit': button.textContent = '📷 업로드'; break;
+          case 'timeline-submit': button.textContent = '⏰ 이벤트 등록'; break;
+          case 'youtube-submit': button.textContent = '📺 영상 등록'; break;
+          case 'diary-submit': button.textContent = '📖 일기 등록'; break;
+        }
+      }
     }
 
     document.getElementById('blog-submit').addEventListener('click', async () => {
       const title = document.getElementById('blog-title').value.trim();
       const content = document.getElementById('blog-content').value.trim();
       
-      if (title && content) {
-        try {
-          await addDoc(collection(db, 'blog'), {
-            title,
-            content,
-            createdAt: serverTimestamp()
-          });
-          showSuccess('blog-success');
-          document.getElementById('blog-title').value = '';
-          document.getElementById('blog-content').value = '';
-          loadBlogList();
-        } catch (error) {
-          console.error('블로그 등록 오류:', error);
-          alert('등록 중 오류가 발생했습니다.');
-        }
-      } else {
+      if (!title || !content) {
         alert('제목과 내용을 모두 입력해주세요! 📝');
+        return;
+      }
+
+      try {
+        setButtonState('blog-submit', true);
+        
+        await addDoc(collection(db, 'blog'), {
+          title,
+          content,
+          createdAt: serverTimestamp()
+        });
+        
+        showSuccess('blog-success');
+        document.getElementById('blog-title').value = '';
+        document.getElementById('blog-content').value = '';
+        loadBlogList();
+        
+      } catch (error) {
+        console.error('블로그 등록 오류:', error);
+        alert('등록 중 오류가 발생했습니다: ' + error.message);
+      } finally {
+        setButtonState('blog-submit', false);
       }
     });
 
@@ -930,28 +841,34 @@
       const file = document.getElementById('gallery-file').files[0];
       const desc = document.getElementById('gallery-desc').value.trim();
       
-      if (file && desc) {
-        try {
-          const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
-          const snapshot = await uploadBytes(storageRef, file);
-          const imageUrl = await getDownloadURL(snapshot.ref);
-          
-          await addDoc(collection(db, 'gallery'), {
-            imageUrl,
-            desc,
-            createdAt: serverTimestamp()
-          });
-          
-          showSuccess('gallery-success');
-          document.getElementById('gallery-file').value = '';
-          document.getElementById('gallery-desc').value = '';
-          loadGalleryList();
-        } catch (error) {
-          console.error('갤러리 업로드 오류:', error);
-          alert('업로드 중 오류가 발생했습니다.');
-        }
-      } else {
+      if (!file || !desc) {
         alert('파일과 설명을 모두 입력해주세요! 📷');
+        return;
+      }
+
+      try {
+        setButtonState('gallery-submit', true);
+        
+        const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        const imageUrl = await getDownloadURL(snapshot.ref);
+        
+        await addDoc(collection(db, 'gallery'), {
+          imageUrl,
+          desc,
+          createdAt: serverTimestamp()
+        });
+        
+        showSuccess('gallery-success');
+        document.getElementById('gallery-file').value = '';
+        document.getElementById('gallery-desc').value = '';
+        loadGalleryList();
+        
+      } catch (error) {
+        console.error('갤러리 업로드 오류:', error);
+        alert('업로드 중 오류가 발생했습니다: ' + error.message);
+      } finally {
+        setButtonState('gallery-submit', false);
       }
     });
 
@@ -959,23 +876,30 @@
       const title = document.getElementById('timeline-title').value.trim();
       const content = document.getElementById('timeline-content').value.trim();
       
-      if (title && content) {
-        try {
-          await addDoc(collection(db, 'timeline'), {
-            title,
-            content,
-            createdAt: serverTimestamp()
-          });
-          showSuccess('timeline-success');
-          document.getElementById('timeline-title').value = '';
-          document.getElementById('timeline-content').value = '';
-          loadTimelineList();
-        } catch (error) {
-          console.error('타임라인 등록 오류:', error);
-          alert('등록 중 오류가 발생했습니다.');
-        }
-      } else {
+      if (!title || !content) {
         alert('제목과 내용을 모두 입력해주세요! ⏰');
+        return;
+      }
+
+      try {
+        setButtonState('timeline-submit', true);
+        
+        await addDoc(collection(db, 'timeline'), {
+          title,
+          content,
+          createdAt: serverTimestamp()
+        });
+        
+        showSuccess('timeline-success');
+        document.getElementById('timeline-title').value = '';
+        document.getElementById('timeline-content').value = '';
+        loadTimelineList();
+        
+      } catch (error) {
+        console.error('타임라인 등록 오류:', error);
+        alert('등록 중 오류가 발생했습니다: ' + error.message);
+      } finally {
+        setButtonState('timeline-submit', false);
       }
     });
 
@@ -983,23 +907,30 @@
       const url = document.getElementById('youtube-url').value.trim();
       const desc = document.getElementById('youtube-desc').value.trim();
       
-      if (url && desc) {
-        try {
-          await addDoc(collection(db, 'youtube'), {
-            videoUrl: url,
-            description: desc,
-            createdAt: serverTimestamp()
-          });
-          showSuccess('youtube-success');
-          document.getElementById('youtube-url').value = '';
-          document.getElementById('youtube-desc').value = '';
-          loadYoutubeList();
-        } catch (error) {
-          console.error('유튜브 등록 오류:', error);
-          alert('등록 중 오류가 발생했습니다.');
-        }
-      } else {
+      if (!url || !desc) {
         alert('링크와 설명을 모두 입력해주세요! 📺');
+        return;
+      }
+
+      try {
+        setButtonState('youtube-submit', true);
+        
+        await addDoc(collection(db, 'youtube'), {
+          videoUrl: url,
+          description: desc,
+          createdAt: serverTimestamp()
+        });
+        
+        showSuccess('youtube-success');
+        document.getElementById('youtube-url').value = '';
+        document.getElementById('youtube-desc').value = '';
+        loadYoutubeList();
+        
+      } catch (error) {
+        console.error('유튜브 등록 오류:', error);
+        alert('등록 중 오류가 발생했습니다: ' + error.message);
+      } finally {
+        setButtonState('youtube-submit', false);
       }
     });
 
@@ -1007,23 +938,30 @@
       const date = document.getElementById('diary-date').value;
       const content = document.getElementById('diary-content').value.trim();
       
-      if (date && content) {
-        try {
-          await addDoc(collection(db, 'diary'), {
-            date,
-            content,
-            createdAt: serverTimestamp()
-          });
-          showSuccess('diary-success');
-          document.getElementById('diary-date').value = '';
-          document.getElementById('diary-content').value = '';
-          loadDiaryList();
-        } catch (error) {
-          console.error('다이어리 등록 오류:', error);
-          alert('등록 중 오류가 발생했습니다.');
-        }
-      } else {
+      if (!date || !content) {
         alert('날짜와 내용을 모두 입력해주세요! 📖');
+        return;
+      }
+
+      try {
+        setButtonState('diary-submit', true);
+        
+        await addDoc(collection(db, 'diary'), {
+          date,
+          content,
+          createdAt: serverTimestamp()
+        });
+        
+        showSuccess('diary-success');
+        document.getElementById('diary-date').value = '';
+        document.getElementById('diary-content').value = '';
+        loadDiaryList();
+        
+      } catch (error) {
+        console.error('다이어리 등록 오류:', error);
+        alert('등록 중 오류가 발생했습니다: ' + error.message);
+      } finally {
+        setButtonState('diary-submit', false);
       }
     });
 
@@ -1034,6 +972,12 @@
         const listElement = document.getElementById('blog-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div class="loading-indicator">등록된 블로그 글이 없습니다.</div>';
+          return;
+        }
+        
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1049,7 +993,7 @@
         });
       } catch (error) {
         console.error('블로그 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('blog-list').innerHTML = '<div class="loading-indicator">목록을 불러오는데 실패했습니다.</div>';
       }
     }
 
@@ -1060,6 +1004,12 @@
         const listElement = document.getElementById('gallery-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div class="loading-indicator">등록된 갤러리가 없습니다.</div>';
+          return;
+        }
+        
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1075,7 +1025,7 @@
         });
       } catch (error) {
         console.error('갤러리 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('gallery-list').innerHTML = '<div class="loading-indicator">목록을 불러오는데 실패했습니다.</div>';
       }
     }
 
@@ -1086,6 +1036,12 @@
         const listElement = document.getElementById('timeline-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div class="loading-indicator">등록된 타임라인이 없습니다.</div>';
+          return;
+        }
+        
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1101,7 +1057,7 @@
         });
       } catch (error) {
         console.error('타임라인 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('timeline-list').innerHTML = '<div class="loading-indicator">목록을 불러오는데 실패했습니다.</div>';
       }
     }
 
@@ -1112,6 +1068,12 @@
         const listElement = document.getElementById('youtube-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div class="loading-indicator">등록된 유튜브 영상이 없습니다.</div>';
+          return;
+        }
+        
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1128,7 +1090,7 @@
         });
       } catch (error) {
         console.error('유튜브 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('youtube-list').innerHTML = '<div class="loading-indicator">목록을 불러오는데 실패했습니다.</div>';
       }
     }
 
@@ -1139,6 +1101,12 @@
         const listElement = document.getElementById('diary-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div class="loading-indicator">등록된 다이어리가 없습니다.</div>';
+          return;
+        }
+        
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1154,7 +1122,7 @@
         });
       } catch (error) {
         console.error('다이어리 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('diary-list').innerHTML = '<div class="loading-indicator">목록을 불러오는데 실패했습니다.</div>';
       }
     }
 
@@ -1165,6 +1133,12 @@
         const listElement = document.getElementById('guestbook-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div class="loading-indicator">등록된 방명록이 없습니다.</div>';
+          return;
+        }
+        
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1180,20 +1154,20 @@
         });
       } catch (error) {
         console.error('방명록 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('guestbook-list').innerHTML = '<div class="loading-indicator">목록을 불러오는데 실패했습니다.</div>';
       }
     }
 
     window.deleteItem = async function(collectionName, docId) {
-      if (confirm('정말 삭제하시겠습니까?')) {
-        try {
-          await deleteDoc(doc(db, collectionName, docId));
-          loadContent(document.querySelector('.tab-btn.active').dataset.tab);
-          alert('삭제되었습니다.');
-        } catch (error) {
-          console.error('삭제 오류:', error);
-          alert('삭제 중 오류가 발생했습니다.');
-        }
+      if (!confirm('정말 삭제하시겠습니까?')) return;
+      
+      try {
+        await deleteDoc(doc(db, collectionName, docId));
+        alert('삭제되었습니다.');
+        loadContent(currentTab);
+      } catch (error) {
+        console.error('삭제 오류:', error);
+        alert('삭제 중 오류가 발생했습니다: ' + error.message);
       }
     };
 
@@ -1268,12 +1242,7 @@
 
     setInterval(createAdminParticle, 4000);
 
-    try {
-      loadBlogList();
-    } catch (error) {
-      console.error('Firebase 초기화 실패:', error);
-      showDemoData();
-    }
+    loadBlogList();
   </script>
 </body>
 </html>

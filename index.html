@@ -25,6 +25,7 @@
       overflow: hidden;
       height: 100vh;
       cursor: url('data:image/cur;base64,AAACAAEAICAAAAcABQAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA'), auto;
+      touch-action: manipulation;
     }
 
     .desktop {
@@ -63,6 +64,7 @@
       align-items: center;
       gap: 5px;
       transition: all 0.1s;
+      user-select: none;
     }
 
     .start-button:hover {
@@ -151,6 +153,7 @@
       font-size: 8px;
       font-weight: bold;
       transition: all 0.1s;
+      user-select: none;
     }
 
     .control-button:hover {
@@ -176,6 +179,7 @@
       grid-template-columns: repeat(auto-fit, 80px);
       gap: 20px;
       z-index: 5;
+      pointer-events: auto;
     }
 
     .desktop-icon {
@@ -191,6 +195,9 @@
       text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
       transition: all 0.2s;
       animation: iconFloat 3s ease-in-out infinite;
+      user-select: none;
+      pointer-events: auto;
+      touch-action: manipulation;
     }
 
     @keyframes iconFloat {
@@ -221,6 +228,7 @@
       margin-bottom: 4px;
       filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
       transition: all 0.2s;
+      pointer-events: none;
     }
 
     .desktop-icon:hover .icon-image {
@@ -232,6 +240,7 @@
       text-align: center;
       word-wrap: break-word;
       max-width: 70px;
+      pointer-events: none;
     }
 
     .start-menu {
@@ -271,6 +280,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      user-select: none;
     }
 
     .start-menu-item:hover {
@@ -456,6 +466,7 @@
       padding: 4px 12px;
       cursor: pointer;
       transition: all 0.1s;
+      user-select: none;
     }
 
     .button-3d:hover {
@@ -479,38 +490,38 @@
 
   <div class="desktop" id="desktop">
     <div class="desktop-icons">
-      <a href="index.html" class="desktop-icon" data-window="about">
+      <div class="desktop-icon" data-window="about">
         <div class="icon-image">💫</div>
         <div class="icon-label">HOME</div>
-      </a>
-      <a href="blog.html" class="desktop-icon" data-window="blog">
+      </div>
+      <div class="desktop-icon" data-window="blog" data-url="blog.html">
         <div class="icon-image">📂</div>
         <div class="icon-label">블로그</div>
-      </a>
-      <a href="gallery.html" class="desktop-icon" data-window="gallery">
+      </div>
+      <div class="desktop-icon" data-window="gallery" data-url="gallery.html">
         <div class="icon-image">🖼️</div>
         <div class="icon-label">갤러리</div>
-      </a>
-      <a href="timeline.html" class="desktop-icon" data-window="timeline">
+      </div>
+      <div class="desktop-icon" data-window="timeline" data-url="timeline.html">
         <div class="icon-image">⏰</div>
         <div class="icon-label">타임라인</div>
-      </a>
-      <a href="guestbook.html" class="desktop-icon" data-window="guestbook">
+      </div>
+      <div class="desktop-icon" data-window="guestbook" data-url="guestbook.html">
         <div class="icon-image">💬</div>
         <div class="icon-label">방명록</div>
-      </a>
-      <a href="youtube.html" class="desktop-icon" data-window="youtube">
+      </div>
+      <div class="desktop-icon" data-window="youtube" data-url="youtube.html">
         <div class="icon-image">📺</div>
         <div class="icon-label">유튜브</div>
-      </a>
-      <a href="diary.html" class="desktop-icon" data-window="diary">
+      </div>
+      <div class="desktop-icon" data-window="diary" data-url="diary.html">
         <div class="icon-image">📖</div>
         <div class="icon-label">다이어리</div>
-      </a>
-      <a href="login.html" class="desktop-icon" data-window="admin">
+      </div>
+      <div class="desktop-icon" data-window="admin" data-url="login.html">
         <div class="icon-image">🛠️</div>
         <div class="icon-label">관리자</div>
-      </a>
+      </div>
     </div>
 
     <div class="window" id="aboutWindow">
@@ -526,60 +537,8 @@
         <h2>🌟 안녕, 나는 가현이야!</h2>
         <p>내 홈페이지에 온 걸 환영해! ✨</p>
         <br>
-        <div class="button-3d" onclick="openWindow('blog')">블로그 보기</div>
-        <div class="button-3d" onclick="openWindow('gallery')">갤러리 보기</div>
-      </div>
-    </div>
-
-    <div class="window" id="blogWindow">
-      <div class="title-bar">
-        <div class="title-text">📂 blog.txt</div>
-        <div class="window-controls">
-          <div class="control-button minimize-btn">-</div>
-          <div class="control-button maximize-btn">□</div>
-          <div class="control-button close-btn">×</div>
-        </div>
-      </div>
-      <div class="window-body">
-        <h2>가현이 블로그 📘</h2>
-        <div id="blogList">
-          <div class="blog-post">
-            <h3>첫 번째 포스트</h3>
-            <p>안녕하세요! 가현이의 블로그에 오신 것을 환영합니다. 여기서 제 일상과 생각들을 공유할 예정이에요.</p>
-            <hr/>
-          </div>
-          <div class="blog-post">
-            <hr/>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="window" id="galleryWindow">
-      <div class="title-bar">
-        <div class="title-text">🖼️ gallery.exe</div>
-        <div class="window-controls">
-          <div class="control-button minimize-btn">-</div>
-          <div class="control-button maximize-btn">□</div>
-          <div class="control-button close-btn">×</div>
-        </div>
-      </div>
-      <div class="window-body">
-        <h2>가현이 갤러리 🖼️</h2>
-        <div class="gallery-grid">
-          <div class="gallery-item">
-            <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #ff9a9e, #fecfef); border: 2px inset #c0c0c0; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌸</div>
-            <p>현태와</p>
-          </div>
-          <div class="gallery-item">
-            <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #a8edea, #fed6e3); border: 2px inset #c0c0c0; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌊</div>
-            <p>연출이었을 때!</p>
-          </div>
-          <div class="gallery-item">
-            <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #ffecd2, #fcb69f); border: 2px inset #c0c0c0; display: flex; align-items: center; justify-content: center; font-size: 24px;">🍂</div>
-            <p>미술부!</p>
-          </div>
-        </div>
+        <div class="button-3d" onclick="window.location.href='blog.html'">블로그 보기</div>
+        <div class="button-3d" onclick="window.location.href='gallery.html'">갤러리 보기</div>
       </div>
     </div>
 
@@ -588,25 +547,25 @@
       <div class="start-menu-item" onclick="openWindow('about')">
         <span>💌</span> About Me
       </div>
-      <div class="start-menu-item" onclick="openWindow('blog')">
+      <div class="start-menu-item" onclick="window.location.href='blog.html'">
         <span>📂</span> 블로그
       </div>
-      <div class="start-menu-item" onclick="openWindow('gallery')">
+      <div class="start-menu-item" onclick="window.location.href='gallery.html'">
         <span>🖼️</span> 갤러리
       </div>
-      <div class="start-menu-item" onclick="openWindow('timeline')">
+      <div class="start-menu-item" onclick="window.location.href='timeline.html'">
         <span>⏰</span> 타임라인
       </div>
-      <div class="start-menu-item" onclick="openWindow('guestbook')">
+      <div class="start-menu-item" onclick="window.location.href='guestbook.html'">
         <span>💬</span> 방명록
       </div>
-      <div class="start-menu-item" onclick="openWindow('youtube')">
+      <div class="start-menu-item" onclick="window.location.href='youtube.html'">
         <span>📺</span> 유튜브
       </div>
-      <div class="start-menu-item" onclick="openWindow('diary')">
+      <div class="start-menu-item" onclick="window.location.href='diary.html'">
         <span>📖</span> 다이어리
       </div>
-      <div class="start-menu-item" onclick="openWindow('admin')">
+      <div class="start-menu-item" onclick="window.location.href='login.html'">
         <span>🛠️</span> 관리자
       </div>
     </div>
@@ -790,17 +749,62 @@
       }
     });
 
+
     document.querySelectorAll('.desktop-icon').forEach(icon => {
+
       icon.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        
         const windowId = icon.dataset.window;
-        openWindow(windowId);
+        const url = icon.dataset.url;
+        
+        console.log('Icon clicked:', windowId, url);
+        
+        if (windowId === 'about') {
+          openWindow(windowId);
+        } else if (url) {
+          window.location.href = url;
+        }
       });
 
       icon.addEventListener('dblclick', (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        
         const windowId = icon.dataset.window;
-        openWindow(windowId);
+        const url = icon.dataset.url;
+        
+        if (windowId === 'about') {
+          openWindow(windowId);
+        } else if (url) {
+          window.location.href = url;
+        }
+      });
+
+      let touchStartTime = 0;
+      
+      icon.addEventListener('touchstart', (e) => {
+        touchStartTime = Date.now();
+        icon.style.transform = 'scale(0.95)';
+      }, { passive: true });
+
+      icon.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        icon.style.transform = '';
+        
+        const touchDuration = Date.now() - touchStartTime;
+        
+        if (touchDuration < 500) {
+          const windowId = icon.dataset.window;
+          const url = icon.dataset.url;
+          
+          if (windowId === 'about') {
+            openWindow(windowId);
+          } else if (url) {
+            window.location.href = url;
+          }
+        }
       });
     });
 

@@ -485,7 +485,7 @@
         <div class="form-group">
           <label class="form-label email" for="email">이메일 주소</label>
           <div class="input-wrapper">
-            <input type="email" id="email" class="form-input" placeholder="admin@example.com" value="gah7186@naver.com" required>
+            <input type="email" id="email" class="form-input" required>
             <div class="input-icon">👤</div>
           </div>
         </div>
@@ -493,7 +493,7 @@
         <div class="form-group">
           <label class="form-label password" for="password">비밀번호</label>
           <div class="input-wrapper">
-            <input type="password" id="password" class="form-input" placeholder="••••••••" value="gah981107" required>
+            <input type="password" id="password" class="form-input" required>
             <div class="input-icon">🔒</div>
           </div>
         </div>
@@ -517,7 +517,7 @@
 
   <script type="module">
     import { auth } from './firebase/firebase.js';
-    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
     const loginForm = document.getElementById('loginForm');
     const loginBtn = document.getElementById('loginBtn');
@@ -584,6 +584,7 @@
             message += '존재하지 않는 계정입니다. 📧';
             break;
           case 'auth/wrong-password':
+          case 'auth/invalid-credential':
             message += '비밀번호가 올바르지 않습니다. 🔑';
             break;
           case 'auth/invalid-email':
