@@ -359,26 +359,6 @@
       border: 2px inset #c0c0c0;
     }
 
-    .edit-btn {
-      padding: 4px 8px;
-      background: linear-gradient(to bottom, #f39c12, #e67e22);
-      border: 2px outset #c0c0c0;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 9px;
-      transition: all 0.1s;
-      margin-left: 4px;
-    }
-
-    .edit-btn:hover {
-      background: linear-gradient(to bottom, #f7dc6f, #f39c12);
-    }
-
-    .edit-btn:active {
-      border: 2px inset #c0c0c0;
-    }
-
     .content-list {
       max-height: 400px;
       overflow-y: auto;
@@ -708,7 +688,7 @@
       <div class="tab-content" id="guestbook">
         <div class="content-panel">
           <div class="panel-header">방명록 관리</div>
-          <p>방명록은 사용자들이 직접 작성하므로 여기서는 조회만 가능합니다.</p>
+          <p>방명록은 사용자들이 직접 작성하므로 여기서는 조회 및 삭제만 가능합니다.</p>
         </div>
         
         <div class="content-panel">
@@ -796,110 +776,6 @@
       setTimeout(() => {
         element.style.display = 'none';
       }, 3000);
-    }
-
-    function showDemoData() {
-      const blogList = document.getElementById('blog-list');
-      blogList.innerHTML = `
-        <div class="content-item">
-          <h3>첫 번째 블로그 글</h3>
-          <p>안녕하세요! 가현이의 블로그에 오신 것을 환영합니다.</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <h3>윈도우 98 테마 제작기</h3>
-          <p>레트로한 감성의 홈페이지를 만들어보았습니다!</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
-
-      const galleryList = document.getElementById('gallery-list');
-      galleryList.innerHTML = `
-        <div class="content-item">
-          <div style="width: 100px; height: 80px; background: linear-gradient(45deg, #ff9a9e, #fecfef); border: 1px solid #999; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌸</div>
-          <p>봄날의 추억</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <div style="width: 100px; height: 80px; background: linear-gradient(45deg, #a8edea, #fed6e3); border: 1px solid #999; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌊</div>
-          <p>바다 여행</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
-
-      const timelineList = document.getElementById('timeline-list');
-      timelineList.innerHTML = `
-        <div class="content-item">
-          <h3>프로젝트 시작</h3>
-          <p>윈도우 98 스타일의 개인 홈페이지 제작을 시작했습니다.</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <h3>첫 번째 배포</h3>
-          <p>완성된 홈페이지를 처음으로 배포했습니다!</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
-
-      const youtubeList = document.getElementById('youtube-list');
-      youtubeList.innerHTML = `
-        <div class="content-item">
-          <h3>유튜브 영상</h3>
-          <p>재미있는 코딩 튜토리얼 영상입니다!</p>
-          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">https://www.youtube.com/watch?v=dQw4w9WgXcQ</a>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
-
-      const diaryList = document.getElementById('diary-list');
-      diaryList.innerHTML = `
-        <div class="content-item">
-          <h3>2024-06-30</h3>
-          <p>오늘은 정말 특별한 하루였어! 새로운 프로젝트를 시작했다.</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <h3>2024-06-29</h3>
-          <p>친구들과 함께 카페에서 공부했다. 너무 행복한 시간이었어!</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
-
-      const guestbookList = document.getElementById('guestbook-list');
-      guestbookList.innerHTML = `
-        <div class="content-item">
-          <h3>친구</h3>
-          <p>홈페이지 정말 예쁘게 잘 만들었네! 😊</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-        <div class="content-item">
-          <h3>방문자</h3>
-          <p>윈도우 98 느낌이 너무 좋아요! 추억이 새록새록 ✨</p>
-          <div class="item-actions">
-            <button class="delete-btn" onclick="alert('데모 데이터입니다')">삭제</button>
-          </div>
-        </div>
-      `;
     }
 
     document.getElementById('blog-submit').addEventListener('click', async () => {
@@ -1034,6 +910,12 @@
         const listElement = document.getElementById('blog-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">등록된 블로그 글이 없습니다.</div>';
+          return;
+        }
+
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1049,7 +931,7 @@
         });
       } catch (error) {
         console.error('블로그 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('blog-list').innerHTML = '<div style="text-align: center; padding: 40px; color: #e74c3c;">데이터를 불러오는 중 오류가 발생했습니다.</div>';
       }
     }
 
@@ -1060,6 +942,12 @@
         const listElement = document.getElementById('gallery-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">등록된 이미지가 없습니다.</div>';
+          return;
+        }
+
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1075,7 +963,7 @@
         });
       } catch (error) {
         console.error('갤러리 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('gallery-list').innerHTML = '<div style="text-align: center; padding: 40px; color: #e74c3c;">데이터를 불러오는 중 오류가 발생했습니다.</div>';
       }
     }
 
@@ -1086,6 +974,12 @@
         const listElement = document.getElementById('timeline-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">등록된 타임라인 이벤트가 없습니다.</div>';
+          return;
+        }
+
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1101,7 +995,7 @@
         });
       } catch (error) {
         console.error('타임라인 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('timeline-list').innerHTML = '<div style="text-align: center; padding: 40px; color: #e74c3c;">데이터를 불러오는 중 오류가 발생했습니다.</div>';
       }
     }
 
@@ -1112,6 +1006,12 @@
         const listElement = document.getElementById('youtube-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">등록된 유튜브 영상이 없습니다.</div>';
+          return;
+        }
+
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1119,7 +1019,7 @@
           item.innerHTML = `
             <h3>유튜브 영상</h3>
             <p>${data.description}</p>
-            <a href="${data.videoUrl}" target="_blank">${data.videoUrl}</a>
+            <a href="${data.videoUrl}" target="_blank" style="color: #e74c3c; text-decoration: none;">${data.videoUrl}</a>
             <div class="item-actions">
               <button class="delete-btn" onclick="deleteItem('youtube', '${doc.id}')">삭제</button>
             </div>
@@ -1128,7 +1028,7 @@
         });
       } catch (error) {
         console.error('유튜브 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('youtube-list').innerHTML = '<div style="text-align: center; padding: 40px; color: #e74c3c;">데이터를 불러오는 중 오류가 발생했습니다.</div>';
       }
     }
 
@@ -1139,6 +1039,12 @@
         const listElement = document.getElementById('diary-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">등록된 다이어리가 없습니다.</div>';
+          return;
+        }
+
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1154,7 +1060,7 @@
         });
       } catch (error) {
         console.error('다이어리 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('diary-list').innerHTML = '<div style="text-align: center; padding: 40px; color: #e74c3c;">데이터를 불러오는 중 오류가 발생했습니다.</div>';
       }
     }
 
@@ -1165,6 +1071,12 @@
         const listElement = document.getElementById('guestbook-list');
         
         listElement.innerHTML = '';
+        
+        if (snapshot.empty) {
+          listElement.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">등록된 방명록이 없습니다.</div>';
+          return;
+        }
+
         snapshot.forEach(doc => {
           const data = doc.data();
           const item = document.createElement('div');
@@ -1180,7 +1092,7 @@
         });
       } catch (error) {
         console.error('방명록 목록 로드 오류:', error);
-        showDemoData();
+        document.getElementById('guestbook-list').innerHTML = '<div style="text-align: center; padding: 40px; color: #e74c3c;">데이터를 불러오는 중 오류가 발생했습니다.</div>';
       }
     }
 
@@ -1268,12 +1180,7 @@
 
     setInterval(createAdminParticle, 4000);
 
-    try {
-      loadBlogList();
-    } catch (error) {
-      console.error('Firebase 초기화 실패:', error);
-      showDemoData();
-    }
+    loadBlogList();
   </script>
 </body>
 </html>

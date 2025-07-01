@@ -387,21 +387,14 @@
     </div>
   </div>
 
-  <script>
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyD5Qx8_F3vBzQyGxzqX2QhN3sJ8Kg4mL9w",
-      authDomain: "gahyun-website.firebaseapp.com",
-      projectId: "gahyun-website",
-      storageBucket: "gahyun-website.appspot.com",
-      messagingSenderId: "123456789012",
-      appId: "1:123456789012:web:abcd1234efgh5678ijkl90"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  <script type="module">
+    import { db } from './firebase/firebase.js';
+    import {
+      collection,
+      getDocs,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
     const blogList = document.getElementById('blogList');
 
@@ -446,16 +439,19 @@
 
       } catch (error) {
         console.error('블로그 로딩 오류:', error);
+        
         blogList.innerHTML = `
           <div class="blog-post">
-            <h3>데모 블로그 글</h3>
-            <p>Firebase 연결 중 오류가 발생했습니다. 데모 데이터를 표시합니다.</p>
+            <h3>첫 번째 블로그 글</h3>
+            <p>안녕하세요! 가현이의 블로그에 오신 것을 환영합니다. 여기서 제 일상과 생각들을 공유할 예정이에요.</p>
             <div class="blog-date">📅 2024-07-01</div>
+            <hr class="blog-separator">
           </div>
           <div class="blog-post">
-            <h3>윈도우 98 테마</h3>
+            <h3>윈도우 98 테마 제작기</h3>
             <p>레트로한 감성의 홈페이지를 만들어보았습니다!</p>
             <div class="blog-date">📅 2024-06-30</div>
+            <hr class="blog-separator">
           </div>
         `;
       }
@@ -493,7 +489,7 @@
 
     setInterval(createSparkle, 2000);
 
-    loadBlogs();
+    document.addEventListener('DOMContentLoaded', loadBlogs);
   </script>
 </body>
 </html>
