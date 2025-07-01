@@ -19,6 +19,19 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
-export const analytics = getAnalytics(app);
+
+let analytics = null;
+try {
+  if (typeof window !== 'undefined') {
+    analytics = getAnalytics(app);
+  }
+} catch (error) {
+  console.warn('Analytics 초기화 실패:', error);
+}
+
+export { analytics };
 
 console.log('Firebase 초기화 완료');
+console.log('DB 객체:', db);
+console.log('Auth 객체:', auth);
+console.log('Storage 객체:', storage);
