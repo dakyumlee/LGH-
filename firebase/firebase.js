@@ -32,6 +32,3 @@ try {
 export { analytics };
 
 console.log('Firebase 초기화 완료');
-console.log('DB 객체:', db);
-console.log('Auth 객체:', auth);
-console.log('Storage 객체:', storage);

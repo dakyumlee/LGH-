@@ -1,0 +1,11 @@
+# firebase 설정 파일 제외
+firebase.js
+
+# Node.js 관련 (혹시 쓴다면)
+node_modules/
+dist/
+.env
+
+# macOS / Windows 시스템 파일
+.DS_Store
+Thumbs.db
