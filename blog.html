@@ -387,14 +387,21 @@
     </div>
   </div>
 
-  <script type="module">
-    import { db } from './firebase/firebase.js';
-    import {
-      collection,
-      getDocs,
-      query,
-      orderBy
-    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+  <script>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD5Qx8_F3vBzQyGxzqX2QhN3sJ8Kg4mL9w",
+      authDomain: "gahyun-website.firebaseapp.com",
+      projectId: "gahyun-website",
+      storageBucket: "gahyun-website.appspot.com",
+      messagingSenderId: "123456789012",
+      appId: "1:123456789012:web:abcd1234efgh5678ijkl90"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
     const blogList = document.getElementById('blogList');
 
@@ -441,9 +448,14 @@
         console.error('블로그 로딩 오류:', error);
         blogList.innerHTML = `
           <div class="blog-post">
-            <h3>오류 발생</h3>
-            <p>블로그를 불러오는 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.</p>
-            <div class="blog-date">오류 메시지</div>
+            <h3>데모 블로그 글</h3>
+            <p>Firebase 연결 중 오류가 발생했습니다. 데모 데이터를 표시합니다.</p>
+            <div class="blog-date">📅 2024-07-01</div>
+          </div>
+          <div class="blog-post">
+            <h3>윈도우 98 테마</h3>
+            <p>레트로한 감성의 홈페이지를 만들어보았습니다!</p>
+            <div class="blog-date">📅 2024-06-30</div>
           </div>
         `;
       }
@@ -481,7 +493,7 @@
 
     setInterval(createSparkle, 2000);
 
-    document.addEventListener('DOMContentLoaded', loadBlogs);
+    loadBlogs();
   </script>
 </body>
 </html>
