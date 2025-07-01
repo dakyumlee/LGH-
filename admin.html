@@ -733,23 +733,23 @@
     </div>
   </div>
 
-  <script>
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyD5Qx8_F3vBzQyGxzqX2QhN3sJ8Kg4mL9w",
-      authDomain: "gahyun-website.firebaseapp.com",
-      projectId: "gahyun-website",
-      storageBucket: "gahyun-website.appspot.com",
-      messagingSenderId: "123456789012",
-      appId: "1:123456789012:web:abcd1234efgh5678ijkl90"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
+  <script type="module">
+    import { db, storage } from './firebase/firebase.js';
+    import {
+      collection,
+      addDoc,
+      serverTimestamp,
+      getDocs,
+      query,
+      orderBy,
+      deleteDoc,
+      doc
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import {
+      ref,
+      uploadBytes,
+      getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
 
     if (!sessionStorage.getItem('admin')) {
       alert('접근 권한이 없습니다 🚫');
